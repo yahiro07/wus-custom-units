@@ -615,3 +615,5 @@ hihatPatternSelects.forEach((hihatPatternSelect, index) => {
   );
 });
 document.addEventListener('keydown', handleKeyboardInput);
+
+refreshDom();
