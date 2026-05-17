@@ -20,9 +20,9 @@
   <script type="text/javascript" src="js/synth_dsp.js"></script>
   <script type="text/javascript" src="js/synth_view.js"></script>
   <script type="text/javascript" src="js/synth_message.js"></script>
-  <!-- <script type="text/javascript" src="js/synth_keyboard.js"></script> -->
+  <script type="text/javascript" src="js/synth_keyboard.js"></script>
   <script type="text/javascript" src="js/synth_sequencer.js"></script>
-  <!-- <script type="text/javascript" src="js/synth_midi.js"></script> -->
+  <script type="text/javascript" src="js/synth_midi.js"></script>
   <script type="text/javascript" src="js/synth_setup_unit.js"></script>
   <style>
     body {
@@ -59,25 +59,32 @@
     window.flatMode =
       localStorage.getItem("wus_unit_synthesizer_v2_flat_view") === "1";
 
-    function updateViewModeButtons(flag) {
-      $("#btn-3d-view").toggleClass("active", !flag);
-      $("#btn-2d-view").toggleClass("active", flag);
-    }
-
-    function setFlatMode(flag) {
-      if (window.flatMode === flag) {
-        return;
-      }
-      localStorage.setItem("wus_unit_synthesizer_v2_flat_view", flag ? "1" : "0");
-      window.flatMode = flag;
-      updateViewModeButtons(flag);
-      if (typeof window.applySynthViewMode === "function") {
-        window.applySynthViewMode(flag);
-      }
-    }
-
     $(() => {
+      function updateViewModeButtons(flag) {
+        $("#btn-3d-view").toggleClass("active", !flag);
+        $("#btn-2d-view").toggleClass("active", flag);
+      }
+
+      function setFlatMode(flag) {
+        if (window.flatMode === flag) {
+          return;
+        }
+        localStorage.setItem("wus_unit_synthesizer_v2_flat_view", flag ? "1" : "0");
+        window.flatMode = flag;
+        updateViewModeButtons(flag);
+        if (typeof window.applySynthViewMode === "function") {
+          window.applySynthViewMode(flag);
+        }
+      }
+
       updateViewModeButtons(window.flatMode);
+
+      if (window.hostInterface) {
+        setupWebAudioUnit();
+      } else {
+        setupPcKeyboard();
+        setupMidiKeyboard();
+      }
     });
   </script>
 </head>

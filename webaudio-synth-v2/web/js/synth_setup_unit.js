@@ -1,4 +1,4 @@
-$(function () {
+function setupWebAudioUnit() {
   window.hostInterface?.setupUnitAgent({
     type: "instrument",
     noteInput: {
@@ -10,4 +10,4 @@ $(function () {
       },
     },
   });
-});
+}
