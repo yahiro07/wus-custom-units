@@ -9,6 +9,14 @@ import ControlPanel from './../ControlPanel';
 import Keyboard from './../Keyboard';
 import PropTypes from 'prop-types';
 
+function midiToNoteName(midiNumber) {
+  const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const octave = Math.floor(midiNumber / 12) - 1;
+  const noteName = noteNames[midiNumber % 12];
+  return noteName + octave;
+}
+
+
 const OuterContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,6 +35,8 @@ type Props = {
 };
 /** This holds everything. This is just one step down from App.jsx. */
 class OuterCasing extends Component<Props> {
+  audioContext = window.hostInterface?.audioContext ?? new AudioContext();
+
   constructor(props: Props) {
     super(props);
     autoBind(this);
@@ -45,6 +55,23 @@ class OuterCasing extends Component<Props> {
     this.synth.triggerRelease();
   }
 
+  componentDidMount() {
+    const self = this;
+    window.hostInterface?.setupUnitAgent({
+      type: "instrument",
+      noteInput: {
+        noteOn(noteNumber) {
+          const noteName = midiToNoteName(noteNumber);
+          self.synth.triggerAttack(noteName);
+        },
+        noteOff(noteNumber) {
+          const noteName = midiToNoteName(noteNumber);
+          self.synth.triggerRelease();
+        }
+      }
+    })
+  }
+
   render() {
     const { filterParams, octave, synthParams, synthesizer } = this.props;
     if (!isEmpty(this.filter)) {
@@ -57,7 +84,9 @@ class OuterCasing extends Component<Props> {
       this.synth.dispose();
     }
     /** Create a new Tone.js synth and route audio to this.filter */
-    this.synth = new Tone.Synth(synthesizer).connect(this.filter);
+    this.synth = new Tone.Synth(
+      { ...synthesizer, audioContext: this.audioContext }
+    ).connect(this.filter);
 
     return (
       <OuterContainer>
