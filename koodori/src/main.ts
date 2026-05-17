@@ -32,6 +32,9 @@ import {
   defaultNoteVolume,
   defaultPattern,
 } from './utils';
+import { getHostInterface } from '@wus/unit-types';
+
+const hostInterface = getHostInterface();
 
 // 初期化して使う
 let audioCtx: AudioContext;
@@ -48,6 +51,7 @@ let snareBuffer: AudioBuffer;
 let hihatBuffer: AudioBuffer;
 let impulseBuffer: AudioBuffer;
 let worker: Worker;
+
 
 type PartType = 'synth' | 'kick' | 'snare' | 'hihat';
 
@@ -241,7 +245,7 @@ const initializeSamples = async () => {
  * オーディオ周りの初期化
  */
 const initializeAudio = () => {
-  audioCtx = new AudioContext();
+  audioCtx = hostInterface?.audioContext || new AudioContext();
   masterGainNode = new GainNode(audioCtx, { gain: store.masterVolume * 0.01 });
 };
 
@@ -661,3 +665,15 @@ partToggles.forEach((partToggle) => {
 document.addEventListener('keydown', handleKeyboardInput);
 
 refreshDom();
+
+hostInterface?.setupUnitAgent({
+  type: 'instrument',
+  categoryHint: "drumMachine", 
+  setPlayState(playing) {
+    if(playing){
+      void handleStart();
+    } else {
+      handleStop();
+    }
+  },
+})
