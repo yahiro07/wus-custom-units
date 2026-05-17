@@ -37,7 +37,7 @@ html {
   border-radius: 4px;
   box-shadow: 0 8px 0 0 #d3d3d3;
   opacity: 0;
-  transform:translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   visibility: hidden;
   transition: opacity 0.2s, visibility 0.2s;
   appearance: none;
@@ -102,7 +102,7 @@ html {
   border-radius: 50%;
 }
 
-.radioButton:checked + .radioButton__label::after {
+.radioButton:checked+.radioButton__label::after {
   content: '';
   position: absolute;
   top: 2px;
@@ -161,12 +161,12 @@ html {
   opacity: 0.6;
 }
 
-.bank:checked + .bank__label {
+.bank:checked+.bank__label {
   color: #fff;
   background: #00bfff;
 }
 
-.bank.--reserve + .bank__label {
+.bank.--reserve+.bank__label {
   color: #2c2c2c;
   background: #c0c0c0;
 }
@@ -325,6 +325,22 @@ html {
   background: #2c2c2c;
   border-radius: 2px;
   writing-mode: vertical-rl;
+}
+
+.sequencer__partToggle {
+  border: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.sequencer__partToggle.--inactive {
+  color: #2c2c2c;
+  background: #c0c0c0;
+}
+
+.sequencer__partToggle:hover {
+  opacity: 0.6;
 }
 
 .sequencer__noteSelectWrapper {

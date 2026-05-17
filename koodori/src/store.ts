@@ -391,6 +391,10 @@ const hihatPattern = [
 ];
 const currentBank = 0;
 const reserveBank = false;
+const synthEnabled = [true, true, true, true];
+const kickEnabled = [true, true, true, true];
+const snareEnabled = [true, true, true, true];
+const hihatEnabled = [true, true, true, true];
 const delayGain = 0;
 const reverbGain = 0;
 const masterVolume = 25;
@@ -414,6 +418,10 @@ const store = {
   kickPattern,
   snarePattern,
   hihatPattern,
+  synthEnabled,
+  kickEnabled,
+  snareEnabled,
+  hihatEnabled,
   currentBank,
   reserveBank: reserveBank as ReserveBank,
   delayGain,

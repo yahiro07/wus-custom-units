@@ -70,6 +70,9 @@ const snarePatternSelects = document.querySelectorAll<HTMLInputElement>(
 const hihatPatternSelects = document.querySelectorAll<HTMLInputElement>(
   '[data-selector=hihatPatternSelect]',
 );
+const partToggles = document.querySelectorAll<HTMLButtonElement>(
+  '[data-selector=partToggle]',
+);
 const currentNoteIndicators = document.querySelectorAll<HTMLDivElement>(
   '[data-selector=currentNote]',
 );
@@ -99,5 +102,6 @@ export {
   kickPatternSelects,
   snarePatternSelects,
   hihatPatternSelects,
+  partToggles,
   currentNoteIndicators,
 };

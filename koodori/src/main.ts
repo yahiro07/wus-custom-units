@@ -23,6 +23,7 @@ import {
   kickPatternSelects,
   snarePatternSelects,
   hihatPatternSelects,
+  partToggles,
   currentNoteIndicators,
 } from './elements';
 import {
@@ -48,6 +49,18 @@ let hihatBuffer: AudioBuffer;
 let impulseBuffer: AudioBuffer;
 let worker: Worker;
 
+type PartType = 'synth' | 'kick' | 'snare' | 'hihat';
+
+const getPartEnabledStates = (partType: PartType) => {
+  if (partType === 'synth') return store.synthEnabled;
+  if (partType === 'kick') return store.kickEnabled;
+  if (partType === 'snare') return store.snareEnabled;
+  return store.hihatEnabled;
+};
+
+const isPartEnabled = (partType: PartType) =>
+  getPartEnabledStates(partType)[store.currentBank];
+
 /**
  * 指定された時間に鳴らす音を準備し、発音を予約する
  * @param time 発音時間
@@ -55,7 +68,10 @@ let worker: Worker;
  */
 const scheduleNote = (time: number, synthOption: SynthOption) => {
   // シンセサイザー
-  if (store.synthPattern[store.currentBank][store.currentNote]) {
+  if (
+    store.synthEnabled[store.currentBank]
+    && store.synthPattern[store.currentBank][store.currentNote]
+  ) {
     const { waveform, gain, pitchName, length } = synthOption;
     const oscNode = new OscillatorNode(audioCtx, { type: waveform });
     const noteGainNode = new GainNode(audioCtx, { gain });
@@ -67,7 +83,10 @@ const scheduleNote = (time: number, synthOption: SynthOption) => {
   }
 
   // キック
-  if (store.kickPattern[store.currentBank][store.currentNote]) {
+  if (
+    store.kickEnabled[store.currentBank]
+    && store.kickPattern[store.currentBank][store.currentNote]
+  ) {
     const kickNode = audioCtx.createBufferSource();
     kickNode.buffer = kickBuffer;
     kickNode.connect(masterFilterNode);
@@ -75,7 +94,10 @@ const scheduleNote = (time: number, synthOption: SynthOption) => {
   }
 
   // スネア
-  if (store.snarePattern[store.currentBank][store.currentNote]) {
+  if (
+    store.snareEnabled[store.currentBank]
+    && store.snarePattern[store.currentBank][store.currentNote]
+  ) {
     const snareNode = audioCtx.createBufferSource();
     snareNode.buffer = snareBuffer;
     snareNode.connect(masterFilterNode);
@@ -83,7 +105,10 @@ const scheduleNote = (time: number, synthOption: SynthOption) => {
   }
 
   // ハイハット
-  if (store.hihatPattern[store.currentBank][store.currentNote]) {
+  if (
+    store.hihatEnabled[store.currentBank]
+    && store.hihatPattern[store.currentBank][store.currentNote]
+  ) {
     const hihatNode = audioCtx.createBufferSource();
     hihatNode.buffer = hihatBuffer;
     hihatNode.connect(masterFilterNode);
@@ -188,6 +213,13 @@ const refreshDom = () => {
   });
   hihatPatternSelects.forEach((patternSelect, index) => {
     patternSelect.checked = store.hihatPattern[store.currentBank][index];
+  });
+  partToggles.forEach((partToggle) => {
+    const { type } = partToggle.dataset;
+    if (!type) return;
+    const enabled = isPartEnabled(type as PartType);
+    partToggle.classList.toggle('--inactive', !enabled);
+    partToggle.setAttribute('aria-pressed', String(enabled));
   });
 };
 
@@ -522,6 +554,15 @@ const handleChangePattern = (e: Event, index: number) => {
   }
 };
 
+const handleTogglePart = (e: Event) => {
+  if (!(e.currentTarget instanceof HTMLButtonElement)) return;
+  const { type } = e.currentTarget.dataset;
+  if (!type) return;
+  const partEnabledStates = getPartEnabledStates(type as PartType);
+  partEnabledStates[store.currentBank] = !partEnabledStates[store.currentBank];
+  refreshDom();
+};
+
 // キーボード入力での操作
 const handleKeyboardInput = (e: KeyboardEvent) => {
   switch (e.key) {
@@ -613,6 +654,9 @@ hihatPatternSelects.forEach((hihatPatternSelect, index) => {
   hihatPatternSelect.addEventListener('change', (e) =>
     handleChangePattern(e, index),
   );
+});
+partToggles.forEach((partToggle) => {
+  partToggle.addEventListener('click', handleTogglePart);
 });
 document.addEventListener('keydown', handleKeyboardInput);
 
