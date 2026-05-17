@@ -362,22 +362,39 @@ document.addEventListener('DOMContentLoaded', () => {
     activeKeys.forEach(midi => handleKeyUp(midi));
   }, { passive: false });
 
-  // Computer keyboard
-  document.addEventListener('keydown', (e) => {
-    if (e.repeat) return;
-    const midi = KEY_MAP[e.key.toLowerCase()];
-    if (midi !== undefined) {
-      e.preventDefault();
-      initAudio();
-      handleKeyDown(midi);
-    }
-  });
+  if (window.hostInterface) {
+    window.hostInterface.setupUnitAgent({
+      type: "instrument",
+      categoryHint: "synthesizer",
+      noteInput: {
+        noteOn(noteNumber) {
+          initAudio();
+          handleKeyDown(noteNumber);
+        },
+        noteOff(noteNumber) {
+          handleKeyUp(noteNumber);
+        },
+      },
+    })
 
-  document.addEventListener('keyup', (e) => {
-    const midi = KEY_MAP[e.key.toLowerCase()];
-    if (midi !== undefined) {
-      e.preventDefault();
-      handleKeyUp(midi);
-    }
-  });
+  } else {
+    // Computer keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      const midi = KEY_MAP[e.key.toLowerCase()];
+      if (midi !== undefined) {
+        e.preventDefault();
+        initAudio();
+        handleKeyDown(midi);
+      }
+    });
+    document.addEventListener('keyup', (e) => {
+      const midi = KEY_MAP[e.key.toLowerCase()];
+      if (midi !== undefined) {
+        e.preventDefault();
+        handleKeyUp(midi);
+      }
+    });
+  }
+
 });
