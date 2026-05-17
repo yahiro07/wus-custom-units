@@ -28,7 +28,7 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0",
-    "@wus/unit-types": "file:../../webaudio-unit-system/framework/packages/wus-unit-types"
+    "@wus/unit-types": "file:../wus-unit-types"
   },
   "private": true
 }
