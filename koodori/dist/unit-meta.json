@@ -2,5 +2,6 @@
   "name": "koodori",
   "unitType": "instrument",
   "category": "drumMachine",
-  "repositoryUrl": "https://github.com/naberyo34/koodori.git"
+  "repositoryUrl": "https://github.com/naberyo34/koodori.git",
+  "preferredSize": "800,500"
 }

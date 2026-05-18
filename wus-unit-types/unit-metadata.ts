@@ -5,4 +5,5 @@ export type UnitMetadata = {
   name: string;
   repositoryUrl: string;
   category?: UnitCategoryHint;
+  preferredSize: string;
 };
