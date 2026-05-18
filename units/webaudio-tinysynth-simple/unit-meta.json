@@ -2,5 +2,6 @@
   "name": "webaudio-tinysynth-simple",
   "unitType": "instrument",
   "category": "synthesizer",
-  "repositoryUrl": "https://github.com/g200kg/webaudio-tinysynth"
+  "repositoryUrl": "https://github.com/g200kg/webaudio-tinysynth",
+  "preferredSize": "520,280"
 }
