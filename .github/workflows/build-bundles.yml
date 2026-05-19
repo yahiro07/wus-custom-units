@@ -28,15 +28,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: koodori/package-lock.json
 
-      - name: Install koodori dependencies
-        run: npm ci
-        working-directory: koodori
-
-      - name: Build dist
-        run: bash ./build.sh
+      - name: Build all units
+        run: bash ./build_all.sh
 
       - name: Prepare bundles worktree
         run: |
