@@ -8,6 +8,7 @@ import ControlPanel from "./../ControlPanel";
 import Keyboard from "./../Keyboard";
 import PropTypes from "prop-types";
 import { createCrossRealmAudioBridgingNode } from "../../cross-realm-audio-bridging-node";
+import * as Tone from "tone";
 
 function midiToNoteName(midiNumber) {
   const noteNames = [
