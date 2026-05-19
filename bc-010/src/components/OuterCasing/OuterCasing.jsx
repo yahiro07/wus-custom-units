@@ -53,7 +53,7 @@ const wrappedDestinationNode = window.hostInterface
       window.hostInterface.raw.outputNode,
       toneAudioContext,
     )
-  : Tone.Destination;
+  : undefined;
 
 /** This holds everything. This is just one step down from App.jsx. */
 class OuterCasing extends Component<Props> {
@@ -100,9 +100,12 @@ class OuterCasing extends Component<Props> {
       this.filter.dispose();
     }
     /** Create a new Tone.js filter and route audio to master. */
-    this.filter = new Tone.AutoFilter(filterParams)
-      .toDestination(wrappedDestinationNode)
-      .start();
+    this.filter = new Tone.AutoFilter(filterParams).start();
+    if (wrappedDestinationNode) {
+      this.filter.connect(wrappedDestinationNode);
+    } else {
+      this.filter.toMaster();
+    }
 
     if (!isEmpty(this.synth)) {
       this.synth.dispose();
