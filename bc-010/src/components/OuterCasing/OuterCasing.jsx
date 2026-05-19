@@ -1,21 +1,33 @@
 // @flow
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import autoBind from 'react-autobind';
-import * as Tone from 'tone';
-import styled from 'styled-components';
-import { isEmpty } from 'lodash';
-import ControlPanel from './../ControlPanel';
-import Keyboard from './../Keyboard';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import autoBind from "react-autobind";
+import styled from "styled-components";
+import { isEmpty } from "lodash";
+import ControlPanel from "./../ControlPanel";
+import Keyboard from "./../Keyboard";
+import PropTypes from "prop-types";
+import { createCrossRealmAudioBridgingNode } from "../../cross-realm-audio-bridging-node";
 
 function midiToNoteName(midiNumber) {
-  const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const noteNames = [
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B",
+  ];
   const octave = Math.floor(midiNumber / 12) - 1;
   const noteName = noteNames[midiNumber % 12];
   return noteName + octave;
 }
-
 
 const OuterContainer = styled.div`
   display: flex;
@@ -33,13 +45,22 @@ type Props = {
   synthesizer: Object,
   toggleOscillator: Function,
 };
+
+const toneAudioContext = Tone.getContext().rawContext;
+const wrappedDestinationNode = window.hostInterface
+  ? createCrossRealmAudioBridgingNode(
+      window.hostInterface.raw.outputNode,
+      toneAudioContext,
+    )
+  : Tone.Destination;
+
 /** This holds everything. This is just one step down from App.jsx. */
 class OuterCasing extends Component<Props> {
-  audioContext = window.hostInterface?.audioContext ?? new AudioContext();
-
   constructor(props: Props) {
     super(props);
     autoBind(this);
+    // Tone.setContext(audioContext);
+    // console.log()
   }
 
   /** Declare synth and filter */
@@ -67,9 +88,9 @@ class OuterCasing extends Component<Props> {
         noteOff(noteNumber) {
           const noteName = midiToNoteName(noteNumber);
           self.synth.triggerRelease();
-        }
-      }
-    })
+        },
+      },
+    });
   }
 
   render() {
@@ -78,15 +99,15 @@ class OuterCasing extends Component<Props> {
       this.filter.dispose();
     }
     /** Create a new Tone.js filter and route audio to master. */
-    this.filter = new Tone.AutoFilter(filterParams).toMaster().start();
+    this.filter = new Tone.AutoFilter(filterParams)
+      .toDestination(wrappedDestinationNode)
+      .start();
 
     if (!isEmpty(this.synth)) {
       this.synth.dispose();
     }
     /** Create a new Tone.js synth and route audio to this.filter */
-    this.synth = new Tone.Synth(
-      { ...synthesizer, audioContext: this.audioContext }
-    ).connect(this.filter);
+    this.synth = new Tone.Synth(synthesizer).connect(this.filter);
 
     return (
       <OuterContainer>
@@ -106,7 +127,7 @@ class OuterCasing extends Component<Props> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   octave: state.octave.octave,
   synthParams: state.synthesizer.envelope,
   filterParams: state.filterParams,
