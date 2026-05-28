@@ -1,7 +1,0 @@
-{
-  "name": "@wus/unit-types",
-  "type": "module",
-  "exports": {
-    ".": "./index.ts"
-  }
-}
