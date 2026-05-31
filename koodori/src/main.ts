@@ -32,7 +32,7 @@ import {
   defaultNoteVolume,
   defaultPattern,
 } from './utils';
-import { getHostInterface } from '@wus/unit-types';
+import { getHostInterface } from 'wus-unit-types';
 
 const hostInterface = getHostInterface();
 
