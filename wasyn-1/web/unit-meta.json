@@ -2,6 +2,13 @@
   "name": "wasyn-1",
   "unitType": "instrument",
   "category": "synthesizer",
-  "repositoryUrl": "https://github.com/errozero/poly-synth",
-  "preferredSize": "720,360"
+  "preferredSize": "720,360",
+  "unitTypesVersion": "0.1.4",
+  "outputSignalTypes": "audio",
+  "inputSignalTypes": "note",
+  "originalRepositoryUrl": "https://github.com/errozero/poly-synth",
+  "originalAuthor": "Mark H",
+  "forkedRepositoryUrl": "https://github.com/yahiro07/wus-custom-units",
+  "forkedAuthor": "yahiro",
+  "license": "MIT"
 }
