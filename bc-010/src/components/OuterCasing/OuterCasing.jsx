@@ -82,25 +82,26 @@ class OuterCasing extends Component<Props> {
 
     const unitInterface = window.unitInterface;
     if (unitInterface) {
-      unitInterface.declareUnitFeatures({
-        type: "instrument",
-        categoryHint: "synthesizer",
-        outputs: ["audio"],
-        inputs: ["note"],
-      });
-      unitInterface.primaryInputPort.setHandlers({
-        noteInput: {
-          noteOn(noteNumber) {
-            const noteName = midiToNoteName(noteNumber);
-            self.synth.triggerAttack(noteName);
-          },
-          noteOff(noteNumber) {
-            const noteName = midiToNoteName(noteNumber);
-            self.synth.triggerRelease(noteName);
+      window.unitInterface.completeSetupWithAttributes({
+        unitFeatures: {
+          type: "instrument",
+          categoryHint: "synthesizer",
+          outputs: ["audio"],
+          inputs: ["note"],
+        },
+        primaryInputPortHandlers: {
+          noteInput: {
+            noteOn(noteNumber) {
+              const noteName = midiToNoteName(noteNumber);
+              self.synth.triggerAttack(noteName);
+            },
+            noteOff(noteNumber) {
+              const noteName = midiToNoteName(noteNumber);
+              self.synth.triggerRelease(noteName);
+            },
           },
         },
       });
-      unitInterface.completeSetup();
     }
   }
 

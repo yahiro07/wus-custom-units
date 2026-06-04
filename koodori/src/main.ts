@@ -667,18 +667,19 @@ partToggles.forEach((partToggle) => {
 
 refreshDom();
 
-unitInterface?.declareUnitFeatures({
-  type: 'instrument',
-  categoryHint: 'drumMachine',
-  outputs: ['audio'],
-});
-unitInterface?.setHostCallbacks({
-  setPlayState(playing) {
-    if (playing) {
-      void handleStart();
-    } else {
-      handleStop();
-    }
+unitInterface?.completeSetupWithAttributes({
+  unitFeatures: {
+    type: 'instrument',
+    categoryHint: 'drumMachine',
+    outputs: ['audio'],
+  },
+  hostCallbacks: {
+    setPlayState(playing) {
+      if (playing) {
+        void handleStart();
+      } else {
+        handleStop();
+      }
+    },
   },
 });
-unitInterface?.completeSetup();

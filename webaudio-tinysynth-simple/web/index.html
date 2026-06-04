@@ -31,22 +31,6 @@
 
       const uintInterface = window.unitInterface;
       if (uintInterface) {
-        unitInterface.declareUnitFeatures({
-          type: "instrument",
-          categoryHint: "synthesizer",
-          outputs: ["audio"],
-          inputs: ["note"],
-        });
-        unitInterface.primaryInputPort.setHandlers({
-          noteInput: {
-            noteOn(noteNumber, velocity) {
-              synth.send([0x90, noteNumber, velocity * 127]);
-            },
-            noteOff(noteNumber) {
-              synth.send([0x80, noteNumber, 0]);
-            },
-          },
-        });
         const inputPorts = unitInterface.createMultiChannelInputPorts(16);
         inputPorts.forEach((port) => {
           port.setHandlers({
@@ -60,7 +44,24 @@
             },
           });
         });
-        unitInterface.completeSetup();
+        unitInterface.completeSetupWithAttributes({
+          unitFeatures: {
+            type: "instrument",
+            categoryHint: "synthesizer",
+            outputs: ["audio"],
+            inputs: ["note"],
+          },
+          primaryInputPortHandlers: {
+            noteInput: {
+              noteOn(noteNumber, velocity) {
+                synth.send([0x90, noteNumber, velocity * 127]);
+              },
+              noteOff(noteNumber) {
+                synth.send([0x80, noteNumber, 0]);
+              },
+            },
+          },
+        });
       }
     </script>
     <style>

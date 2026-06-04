@@ -271,14 +271,13 @@
   for (let s = 0; s < 16; s += 2) pattern.hhc[s] = true;
   syncGrid();
 
-  const unitInterface = window.unitInterface;
-  if (unitInterface) {
-    unitInterface.declareUnitFeatures({
+  window.unitInterface?.completeSetupWithAttributes({
+    unitFeatures: {
       type: "instrument",
       categoryHint: "drumMachine",
       outputs: ["audio"],
-    });
-    unitInterface.setHostCallbacks({
+    },
+    hostCallbacks: {
       setBpm(bpm) {
         bpmInput.value = bpm;
         bpmValue.textContent = bpm;
@@ -304,7 +303,6 @@
           }
         }
       },
-    });
-    unitInterface.completeSetup();
-  }
+    },
+  });
 })();
