@@ -47,12 +47,13 @@
 
   function ensureAudio() {
     if (audioCtx) return;
-    audioCtx = window.hostInterface?.audioContext ?? new AudioContext();
+    audioCtx = window.unitInterface?.audioContext ?? new AudioContext();
 
     masterGain = audioCtx.createGain();
     masterGain.gain.value = parseFloat(masterInput.value);
     masterGain.connect(
-      window.hostInterface?.audioDestinationNode ?? audioCtx.destination,
+      window.unitInterface?.primaryOutputPort.audioOutput.node ??
+        audioCtx.destination,
     );
 
     scheduler = createScheduler(audioCtx, {
@@ -270,32 +271,40 @@
   for (let s = 0; s < 16; s += 2) pattern.hhc[s] = true;
   syncGrid();
 
-  window.hostInterface?.setupUnitAgent({
-    type: "instrument",
-    setBpm(bpm) {
-      bpmInput.value = bpm;
-      bpmValue.textContent = bpm;
-      if (scheduler) scheduler.setBpm(bpm);
-    },
-    setPlayState(playing) {
-      if (playing) {
-        ensureAudio();
-        if (audioCtx.state === "suspended") audioCtx.resume();
-        if (!scheduler.isRunning()) {
-          scheduler.start();
-          playBtn.textContent = "stop";
-          playBtn.classList.add("playing");
+  const unitInterface = window.unitInterface;
+  if (unitInterface) {
+    unitInterface.declareUnitFeatures({
+      type: "instrument",
+      categoryHint: "drumMachine",
+      outputs: ["audio"],
+    });
+    unitInterface.setHostCallbacks({
+      setBpm(bpm) {
+        bpmInput.value = bpm;
+        bpmValue.textContent = bpm;
+        if (scheduler) scheduler.setBpm(bpm);
+      },
+      setPlayState(playing) {
+        if (playing) {
+          ensureAudio();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+          if (!scheduler.isRunning()) {
+            scheduler.start();
+            playBtn.textContent = "stop";
+            playBtn.classList.add("playing");
+          }
+        } else {
+          ensureAudio();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+          if (scheduler.isRunning()) {
+            scheduler.stop();
+            playBtn.textContent = "play";
+            playBtn.classList.remove("playing");
+            clearPlayingHighlight();
+          }
         }
-      } else {
-        ensureAudio();
-        if (audioCtx.state === "suspended") audioCtx.resume();
-        if (scheduler.isRunning()) {
-          scheduler.stop();
-          playBtn.textContent = "play";
-          playBtn.classList.remove("playing");
-          clearPlayingHighlight();
-        }
-      }
-    },
-  });
+      },
+    });
+    unitInterface.completeSetup();
+  }
 })();

@@ -1,6 +1,6 @@
 var app = {
   //Web audio context (Passed in to instruments)
-  context: window.hostInterface?.audioContext ?? new AudioContext(),
+  context: window.unitInterface?.audioContext ?? new AudioContext(),
   keyboardOctave: 3,
   synth: null,
   instructionsHidden: false,

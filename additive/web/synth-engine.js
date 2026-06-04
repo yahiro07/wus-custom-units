@@ -20,8 +20,8 @@ class AdditiveEngine {
   async init() {
     if (this.isInitialized) return;
     this.ctx =
-      window.hostInterface?.audioContext ||
-      new (window.AudioContext || window.webkitAudioContext)();
+      window.unitInterface?.audioContext ??
+      new (window.AudioContext ?? window.webkitAudioContext)();
     if (this.ctx.state === "suspended") await this.ctx.resume();
 
     this.compressor = this.ctx.createDynamicsCompressor();
@@ -31,7 +31,8 @@ class AdditiveEngine {
     this.compressor.attack.value = 0.003;
     this.compressor.release.value = 0.15;
     this.compressor.connect(
-      window.hostInterface?.audioDestinationNode ?? this.ctx.destination,
+      window.unitInterface?.primaryOutputPort.audioOutput.node ??
+        this.ctx.destination,
     );
 
     this.masterGain = this.ctx.createGain();
