@@ -3,7 +3,7 @@
   "unitType": "instrument",
   "category": "synthesizer",
   "preferredSize": "520,280",
-  "unitTypesVersion": "0.2.1",
+  "unitTypesVersion": "0.2.2",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "originalRepositoryUrl": "https://github.com/g200kg/webaudio-tinysynth",
