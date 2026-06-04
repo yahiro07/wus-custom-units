@@ -329,7 +329,7 @@ CTL_Filter.prototype.getnode = function () {
 var WebSynth = function () {
   var self = this;
 
-  this.context = window.hostInterface?.audioContext ?? new AudioContext();
+  this.context = window.unitInterface?.audioContext ?? new AudioContext();
   this.vco1 = new VCO(this.context);
   this.vco2 = new VCO(this.context);
   this.mixer = this.context.createScriptProcessor(stream_length, 1, 2);
@@ -354,7 +354,8 @@ var WebSynth = function () {
   this.filter.connect(this.volume.getnode());
   this.volume.connect(this.delay.getnode());
   this.delay.connect(
-    window.hostInterface?.audioDestinationNode ?? this.context.destination,
+    window.unitInterface?.primaryOutputPort.audioOutput.node ??
+      this.context.destination,
   );
 
   this.mixer.onaudioprocess = function (event) {

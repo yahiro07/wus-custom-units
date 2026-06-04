@@ -19,7 +19,6 @@ var ui = {
     var self = this;
 
     $(document)
-
       .mousedown(function () {
         self.mouseDown = true;
       })
@@ -81,18 +80,27 @@ var ui = {
         //ui.highlightPreset(presetID);
       });
 
-    window.hostInterface?.setupUnitAgent({
-      type: "instrument",
-      noteInput: {
-        noteOn(noteNumber, velocity) {
-          app.checkContext();
-          app.synth.noteOn(noteNumber, velocity * 127);
+    const unitInterface = window.unitInterface;
+    if (unitInterface) {
+      unitInterface.declareUnitFeature({
+        unitType: "instrument",
+        categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note"],
+      });
+      unitInterface.primaryInputPort.setHandlers({
+        noteInput: {
+          noteOn(noteNumber, velocity) {
+            app.checkContext();
+            app.synth.noteOn(noteNumber, velocity * 127);
+          },
+          noteOff(noteNumber) {
+            app.synth.noteOff(noteNumber);
+          },
         },
-        noteOff(noteNumber) {
-          app.synth.noteOff(noteNumber);
-        },
-      },
-    });
+      });
+      unitInterface.completeSetup();
+    }
   },
 
   //-------------
