@@ -1613,11 +1613,11 @@
         );
         if (this.debug) console.log("internalcontext:" + this.internalcontext);
         if (this.internalcontext) {
-          const { hostInterface } = window;
-          if (hostInterface) {
+          const { unitInterface } = window;
+          if (unitInterface) {
             this.setAudioContext(
-              hostInterface.audioContext,
-              hostInterface.audioDestinationNode,
+              unitInterface.audioContext,
+              unitInterface.primaryOutputPort.audioOutput.node,
             );
           } else {
             this.setAudioContext(new AudioContext());

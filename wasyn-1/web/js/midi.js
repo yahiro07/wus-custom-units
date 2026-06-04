@@ -1,5 +1,4 @@
 var midi = {
-
   midiAcess: null,
   inputDeviceID: null,
   outputDeviceID: null,
@@ -16,16 +15,14 @@ var midi = {
     instrument: null,
     instrumentCount: null,
     controlID: null,
-    controlType: null
+    controlType: null,
   },
 
   init: function () {
-
-    console.log('Starting MIDI....');
+    console.log("Starting MIDI....");
 
     function onMIDISuccess(midiAccess) {
-
-      console.log('<===---MIDI INPUTS---===>');
+      console.log("<===---MIDI INPUTS---===>");
       console.log(midiAccess.inputs);
 
       midi.connected = true;
@@ -37,29 +34,33 @@ var midi = {
 
       //Monitor input signals
       var inputs = midiAccess.inputs.values();
-      for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+      for (
+        var input = inputs.next();
+        input && !input.done;
+        input = inputs.next()
+      ) {
         input.value.onmidimessage = midi.midiMessage;
       }
-
     }
 
     function onMIDIFailure(e) {
       midi.connected = false;
-      console.log("No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim " + e);
+      console.log(
+        "No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim " +
+          e,
+      );
     }
 
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess({ sysex: false }).then(onMIDISuccess, onMIDIFailure);
+      navigator
+        .requestMIDIAccess({ sysex: false })
+        .then(onMIDISuccess, onMIDIFailure);
     } else {
       console.log("No MIDI support in your browser.");
     }
-
-
   },
 
-
   midiMessage: function (message) {
-
     var deviceID = message.target.id;
     var data = message.data;
 
@@ -74,17 +75,12 @@ var midi = {
       app.checkContext();
       app.hideInstructions();
       app.synth.noteOn(controlID);
-    }
-
-    else if (controlType == 128) {
+    } else if (controlType == 128) {
       app.synth.noteOff(controlID);
     }
-
   },
+};
 
-
-}
-
-if (!window.hostInterface) {
+if (!window.unitInterface) {
   midi.init();
 }
