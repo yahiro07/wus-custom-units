@@ -32,9 +32,9 @@ import {
   defaultNoteVolume,
   defaultPattern,
 } from './utils';
-import { getHostInterface } from 'wus-unit-types';
+import { getUnitInterface } from 'wus-unit-types';
 
-const hostInterface = getHostInterface();
+const unitInterface = getUnitInterface();
 
 // 初期化して使う
 let audioCtx: AudioContext;
@@ -244,7 +244,7 @@ const initializeSamples = async () => {
  * オーディオ周りの初期化
  */
 const initializeAudio = () => {
-  audioCtx = hostInterface?.audioContext || new AudioContext();
+  audioCtx = unitInterface?.audioContext || new AudioContext();
   masterGainNode = new GainNode(audioCtx, { gain: store.masterVolume * 0.01 });
 };
 
@@ -293,7 +293,7 @@ const initializeRouting = () => {
   // 最終出力
   masterFilterNode.connect(masterGainNode);
   masterGainNode.connect(
-    hostInterface?.audioDestinationNode ?? audioCtx.destination,
+    unitInterface?.primaryOutputPort.audioOutput.node ?? audioCtx.destination,
   );
 };
 
@@ -667,9 +667,12 @@ partToggles.forEach((partToggle) => {
 
 refreshDom();
 
-hostInterface?.setupUnitAgent({
+unitInterface?.declareUnitFeatures({
   type: 'instrument',
   categoryHint: 'drumMachine',
+  outputs: ['audio'],
+});
+unitInterface?.setHostCallbacks({
   setPlayState(playing) {
     if (playing) {
       void handleStart();
@@ -678,3 +681,4 @@ hostInterface?.setupUnitAgent({
     }
   },
 });
+unitInterface?.completeSetup();
