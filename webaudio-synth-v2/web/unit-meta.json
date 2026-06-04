@@ -3,7 +3,7 @@
   "unitType": "instrument",
   "category": "synthesizer",
   "preferredSize": "700,400",
-  "unitTypesVersion": "0.1.4",
+  "unitTypesVersion": "0.2.1",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "originalRepositoryUrl": "https://github.com/aike/webaudiosynthv2",
