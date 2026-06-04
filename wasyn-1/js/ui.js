@@ -80,15 +80,14 @@ var ui = {
         //ui.highlightPreset(presetID);
       });
 
-    const unitInterface = window.unitInterface;
-    if (unitInterface) {
-      unitInterface.declareUnitFeature({
-        unitType: "instrument",
+    window.unitInterface?.completeSetupWithAttributes({
+      unitFeatures: {
+        type: "instrument",
         categoryHint: "synthesizer",
         outputs: ["audio"],
         inputs: ["note"],
-      });
-      unitInterface.primaryInputPort.setHandlers({
+      },
+      primaryInputPortHandlers: {
         noteInput: {
           noteOn(noteNumber, velocity) {
             app.checkContext();
@@ -98,9 +97,8 @@ var ui = {
             app.synth.noteOff(noteNumber);
           },
         },
-      });
-      unitInterface.completeSetup();
-    }
+      },
+    });
   },
 
   //-------------

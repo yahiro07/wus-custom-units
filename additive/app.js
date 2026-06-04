@@ -441,20 +441,22 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   if (window.unitInterface) {
-    window.unitInterface.declareUnitFeatures({
-      type: "instrument",
-      categoryHint: "synthesizer",
-      outputs: ["audio"],
-      inputs: ["note"],
-    });
-    window.unitInterface.primaryInputPort.setHandlers({
-      noteInput: {
-        noteOn(noteNumber) {
-          initAudio();
-          handleKeyDown(noteNumber);
-        },
-        noteOff(noteNumber) {
-          handleKeyUp(noteNumber);
+    window.unitInterface.completeSetupWithAttributes({
+      unitFeatures: {
+        type: "instrument",
+        categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note"],
+      },
+      primaryInputPortHandlers: {
+        noteInput: {
+          noteOn(noteNumber) {
+            initAudio();
+            handleKeyDown(noteNumber);
+          },
+          noteOff(noteNumber) {
+            handleKeyUp(noteNumber);
+          },
         },
       },
     });

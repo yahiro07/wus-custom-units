@@ -1,13 +1,12 @@
 function setupWebAudioUnit() {
-  const unitInterface = window.unitInterface;
-  if (unitInterface) {
-    unitInterface.declareUnitFeatures({
+  window.unitInterface?.completeSetupWithAttributes({
+    unitFeatures: {
       type: "instrument",
       categoryHint: "synthesizer",
       outputs: ["audio"],
       inputs: ["note"],
-    });
-    unitInterface.primaryInputPort.setHandlers({
+    },
+    primaryInputPortHandlers: {
       noteInput: {
         noteOn(noteNumber) {
           ctrl.note_on(noteNumber);
@@ -16,7 +15,6 @@ function setupWebAudioUnit() {
           ctrl.note_off(noteNumber);
         },
       },
-    });
-    unitInterface.completeSetup();
-  }
+    },
+  });
 }
