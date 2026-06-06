@@ -440,6 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { passive: false },
   );
 
+  window.checkUnitInterfaceCompatibility?.("wus-v02");
   if (window.unitInterface) {
     window.unitInterface.completeSetup({
       unitAspects: {

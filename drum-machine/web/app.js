@@ -47,6 +47,7 @@
 
   function ensureAudio() {
     if (audioCtx) return;
+    window.checkUnitInterfaceCompatibility?.("wus-v02");
     audioCtx = window.unitInterface?.audioContext ?? new AudioContext();
 
     masterGain = audioCtx.createGain();

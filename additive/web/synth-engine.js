@@ -19,6 +19,7 @@ class AdditiveEngine {
 
   async init() {
     if (this.isInitialized) return;
+    window.checkUnitInterfaceCompatibility?.("wus-v02");
     this.ctx =
       window.unitInterface?.audioContext ??
       new (window.AudioContext ?? window.webkitAudioContext)();

@@ -48,6 +48,7 @@ type Props = {
 };
 
 const toneAudioContext = Tone.getContext().rawContext;
+window.checkUnitInterfaceCompatibility?.("wus-v02");
 const wrappedDestinationNode = window.unitInterface
   ? createCrossRealmAudioBridgingNode(
       window.unitInterface.primaryOutputPort.audioOutput.node,
