@@ -1,7 +1,7 @@
 function setupWebAudioUnit() {
-  window.unitInterface?.completeSetupWithAttributes({
-    unitFeatures: {
-      type: "instrument",
+  window.unitInterface?.completeSetup({
+    unitAspects: {
+      unitType: "instrument",
       categoryHint: "synthesizer",
       outputs: ["audio"],
       inputs: ["note"],

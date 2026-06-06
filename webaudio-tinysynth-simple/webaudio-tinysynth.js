@@ -1613,6 +1613,7 @@
         );
         if (this.debug) console.log("internalcontext:" + this.internalcontext);
         if (this.internalcontext) {
+          window.checkUnitInterfaceCompatibility?.("wus-v02");
           const { unitInterface } = window;
           if (unitInterface) {
             this.setAudioContext(

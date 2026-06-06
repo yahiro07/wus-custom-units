@@ -47,6 +47,7 @@
 
   function ensureAudio() {
     if (audioCtx) return;
+    window.checkUnitInterfaceCompatibility?.("wus-v02");
     audioCtx = window.unitInterface?.audioContext ?? new AudioContext();
 
     masterGain = audioCtx.createGain();
@@ -271,9 +272,9 @@
   for (let s = 0; s < 16; s += 2) pattern.hhc[s] = true;
   syncGrid();
 
-  window.unitInterface?.completeSetupWithAttributes({
-    unitFeatures: {
-      type: "instrument",
+  window.unitInterface?.completeSetup({
+    unitAspects: {
+      unitType: "instrument",
       categoryHint: "drumMachine",
       outputs: ["audio"],
     },
