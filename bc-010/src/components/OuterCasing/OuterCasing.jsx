@@ -82,9 +82,9 @@ class OuterCasing extends Component<Props> {
 
     const unitInterface = window.unitInterface;
     if (unitInterface) {
-      window.unitInterface.completeSetupWithAttributes({
-        unitFeatures: {
-          type: "instrument",
+      window.unitInterface.completeSetup({
+        unitAspects: {
+          unitType: "instrument",
           categoryHint: "synthesizer",
           outputs: ["audio"],
           inputs: ["note"],
