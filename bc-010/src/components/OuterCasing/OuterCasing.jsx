@@ -50,7 +50,7 @@ type Props = {
 const toneAudioContext = Tone.getContext().rawContext;
 const wrappedDestinationNode = window.unitInterface
   ? createCrossRealmAudioBridgingNode(
-      window.unitInterface.primaryOutputPort.audioOut.node,
+      window.unitInterface.primaryOutputPort.audioOutput.node,
       toneAudioContext,
     )
   : undefined;
@@ -95,9 +95,8 @@ class OuterCasing extends Component<Props> {
               const noteName = midiToNoteName(noteNumber);
               self.synth.triggerAttack(noteName);
             },
-            noteOff(noteNumber) {
-              const noteName = midiToNoteName(noteNumber);
-              self.synth.triggerRelease(noteName);
+            noteOff() {
+              self.synth.triggerRelease();
             },
           },
         },
