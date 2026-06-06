@@ -34,7 +34,7 @@ import {
 } from './utils';
 import { getUnitInterface } from 'wus-unit-types';
 
-const unitInterface = getUnitInterface();
+const unitInterface = getUnitInterface('wus-v02');
 
 // 初期化して使う
 let audioCtx: AudioContext;
@@ -667,9 +667,9 @@ partToggles.forEach((partToggle) => {
 
 refreshDom();
 
-unitInterface?.completeSetupWithAttributes({
-  unitFeatures: {
-    type: 'instrument',
+unitInterface?.completeSetup({
+  unitAspects: {
+    unitType: 'instrument',
     categoryHint: 'drumMachine',
     outputs: ['audio'],
   },
