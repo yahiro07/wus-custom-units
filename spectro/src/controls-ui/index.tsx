@@ -13,6 +13,7 @@ export default function initialiseControlsUi(
     renderParametersUpdateCallback: (
       settings: Partial<RenderParameters>
     ) => void;
+    renderFromUnitInputCallback: () => void;
     renderFromMicrophoneCallback: () => void;
     renderFromFileCallback: (file: ArrayBuffer) => void;
   }
@@ -25,6 +26,7 @@ export default function initialiseControlsUi(
       onClearSpectrogram={props.clearSpectrogramCallback}
       onRenderParametersUpdate={props.renderParametersUpdateCallback}
       onRenderFromMicrophone={props.renderFromMicrophoneCallback}
+      onRenderFromUnitInput={props.renderFromUnitInputCallback}
       onRenderFromFile={props.renderFromFileCallback}
     />,
     container

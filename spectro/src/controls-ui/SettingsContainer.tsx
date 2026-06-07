@@ -39,6 +39,7 @@ import { Scale } from "../spectrogram";
 import { RenderParameters } from "../spectrogram-render";
 
 import generateLabelledSlider from "./LabelledSlider";
+import { unitInterface } from "..";
 
 const controlsTheme = createMuiTheme({
   palette: {
@@ -124,13 +125,19 @@ const formatPercentage = (value: number) => {
   return `${(value * 100).toPrecision(3)}%`;
 };
 
-export type PlayState = "stopped" | "loading-file" | "loading-mic" | "playing";
+export type PlayState =
+  | "stopped"
+  | "loading-file"
+  | "loading-mic"
+  | "loading-unit-input"
+  | "playing";
 
 export interface SettingsContainerProps {
   onStop: () => void;
   onClearSpectrogram: () => void;
   onRenderParametersUpdate: (settings: Partial<RenderParameters>) => void;
   onRenderFromMicrophone: () => void;
+  onRenderFromUnitInput: () => void;
   onRenderFromFile: (file: ArrayBuffer) => void;
 }
 
@@ -138,7 +145,7 @@ export type SettingsContainer = (props: SettingsContainerProps) => JSX.Element;
 
 function generateSettingsContainer(): [
   SettingsContainer,
-  (playState: PlayState) => void
+  (playState: PlayState) => void,
 ] {
   let setPlayStateExport: ((playState: PlayState) => void) | null = null;
 
@@ -147,6 +154,7 @@ function generateSettingsContainer(): [
     onClearSpectrogram,
     onRenderParametersUpdate,
     onRenderFromMicrophone,
+    onRenderFromUnitInput,
     onRenderFromFile,
   }: SettingsContainerProps) => {
     const { current: defaultParameters } = useRef({
@@ -172,7 +180,7 @@ function generateSettingsContainer(): [
 
     const onInnerPaperClick = useCallback(
       (e: MouseEvent) => e.stopPropagation(),
-      []
+      [],
     );
 
     const fileRef = useRef<HTMLInputElement | null>(null);
@@ -180,23 +188,27 @@ function generateSettingsContainer(): [
     const [playState, setPlayState] = useState<PlayState>("stopped");
     const [SensitivitySlider, setSensitivity] = useMemo(
       generateLabelledSlider,
-      []
+      [],
     );
     const [ContrastSlider, setContrast] = useMemo(generateLabelledSlider, []);
     const [ZoomSlider, setZoom] = useMemo(generateLabelledSlider, []);
     const [MinFrequencySlider, setMinFrequency] = useMemo(
       generateLabelledSlider,
-      []
+      [],
     );
     const [MaxFrequencySlider, setMaxFrequency] = useMemo(
       generateLabelledSlider,
-      []
+      [],
     );
 
     const onPlayMicrophoneClick = useCallback(() => {
       setPlayState("loading-mic");
       onRenderFromMicrophone();
     }, [onRenderFromMicrophone, setPlayState]);
+    const onPlayUnitInputClick = useCallback(() => {
+      setPlayState("loading-unit-input");
+      onRenderFromUnitInput();
+    }, [onRenderFromUnitInput, setPlayState]);
     const onPlayFileClick = useCallback(() => {
       if (fileRef.current === null) {
         return;
@@ -239,7 +251,7 @@ function generateSettingsContainer(): [
         onRenderParametersUpdate({ sensitivity: scaledValue });
         setSensitivity(formatPercentage(value));
       },
-      [onRenderParametersUpdate, setSensitivity]
+      [onRenderParametersUpdate, setSensitivity],
     );
     const onContrastChange = useCallback(
       (value: number) => {
@@ -248,7 +260,7 @@ function generateSettingsContainer(): [
         onRenderParametersUpdate({ contrast: scaledValue });
         setContrast(formatPercentage(value));
       },
-      [onRenderParametersUpdate, setSensitivity]
+      [onRenderParametersUpdate, setSensitivity],
     );
     const onZoomChange = useCallback(
       (value: number) => {
@@ -256,7 +268,7 @@ function generateSettingsContainer(): [
         onRenderParametersUpdate({ zoom: value });
         setZoom(formatPercentage(value));
       },
-      [onRenderParametersUpdate, setSensitivity]
+      [onRenderParametersUpdate, setSensitivity],
     );
     const onMinFreqChange = useCallback(
       (value: number) => {
@@ -265,7 +277,7 @@ function generateSettingsContainer(): [
         onRenderParametersUpdate({ minFrequencyHz: hz });
         setMinFrequency(formatHz(hz));
       },
-      [onRenderParametersUpdate, setSensitivity]
+      [onRenderParametersUpdate, setSensitivity],
     );
     const onMaxFreqChange = useCallback(
       (value: number) => {
@@ -274,7 +286,7 @@ function generateSettingsContainer(): [
         onRenderParametersUpdate({ maxFrequencyHz: hz });
         setMaxFrequency(formatHz(hz));
       },
-      [onRenderParametersUpdate, setSensitivity]
+      [onRenderParametersUpdate, setSensitivity],
     );
     const onScaleChange = useCallback(
       (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
@@ -283,13 +295,13 @@ function generateSettingsContainer(): [
           onRenderParametersUpdate({ scale: event.target.value as Scale });
         }
       },
-      [onRenderParametersUpdate]
+      [onRenderParametersUpdate],
     );
     const onGradientChange = useCallback(
       (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
         if (typeof event.target.value === "string") {
           const gradientData = GRADIENTS.find(
-            (g) => g.name === event.target.value
+            (g) => g.name === event.target.value,
           );
           if (gradientData !== undefined) {
             defaultParameters.gradient = gradientData.name;
@@ -297,7 +309,7 @@ function generateSettingsContainer(): [
           }
         }
       },
-      [onRenderParametersUpdate]
+      [onRenderParametersUpdate],
     );
 
     useEffect(() => {
@@ -314,7 +326,7 @@ function generateSettingsContainer(): [
       onRenderParametersUpdate({ scale: defaultParameters.scale });
 
       const gradientData = GRADIENTS.find(
-        (g) => g.name === defaultParameters.gradient
+        (g) => g.name === defaultParameters.gradient,
       );
       if (gradientData !== undefined) {
         onRenderParametersUpdate({ gradient: gradientData.gradient });
@@ -360,6 +372,24 @@ function generateSettingsContainer(): [
             <CircularProgress size={24} className={classes.buttonProgress} />
           )}
         </div>
+
+        {unitInterface && (
+          <div className={classes.buttonContainer}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={onPlayUnitInputClick}
+              startIcon={<AudiotrackIcon />}
+              disabled={playState !== "stopped"}
+            >
+              Render from unit input
+            </Button>
+            {playState === "loading-unit-input" && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
+        )}
 
         <Button
           fullWidth
