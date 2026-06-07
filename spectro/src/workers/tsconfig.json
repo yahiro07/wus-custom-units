@@ -1,14 +1,21 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "composite": true,
-        "lib": ["esnext", "webworker"]
-    },
-    "references": [
-        {
-            "path": "../../"
-        }
-    ],
-    "include": ["./"],
-    "exclude": ["node_modules"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "lib": [
+      "esnext",
+      "webworker"
+    ]
+  },
+  "references": [
+    {
+      "path": "../../"
+    }
+  ],
+  "include": [
+    "./"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

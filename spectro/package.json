@@ -52,6 +52,7 @@
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-glsl-minify": "^1.4.2",
-    "worker-loader": "^3.0.8"
+    "worker-loader": "^3.0.8",
+    "wus-unit-types": "^0.2.4"
   }
 }
