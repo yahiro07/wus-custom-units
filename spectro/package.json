@@ -4,8 +4,8 @@
   "description": "Real-time audio spectrogram generator for the web.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=production",
-    "start": "webpack serve --mode=development",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode=production",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --mode=development",
     "prettier": "prettier --write 'src/**/*.{ts,tsx}'",
     "type-check": "tsc"
   },
