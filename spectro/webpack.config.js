@@ -1,18 +1,18 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: './src/index.ts',
-  devtool: 'source-map',
-  target: 'web',
+  entry: "./src/index.ts",
+  devtool: "source-map",
+  target: "web",
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "main.js",
+    path: path.resolve(__dirname, "dist"),
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: [".ts", ".tsx", ".js", ".json"],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, "dist"),
     compress: true,
     port: 3000,
   },
@@ -21,16 +21,16 @@ module.exports = {
       {
         test: /\.glsl$/,
         exclude: /node_modules/,
-        use: [{ loader: 'webpack-glsl-minify' }],
+        use: [{ loader: "webpack-glsl-minify" }],
       },
       {
         test: /\.worker\.ts$/,
         use: [
-          { loader: 'babel-loader' },
+          { loader: "babel-loader" },
           {
-            loader: 'worker-loader',
+            loader: "worker-loader",
             options: {
-              filename: '[contenthash].worker.js',
+              filename: "[contenthash].worker.js",
             },
           },
         ],
@@ -38,7 +38,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: "babel-loader",
       },
     ],
   },
