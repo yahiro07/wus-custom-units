@@ -6,9 +6,10 @@ function AudioAnalyser() {
     gainNode: null,
     hasNewSong: false,
     init: function () {
-      audioanalyser.audioCtx = new (
-        window.AudioContext || window.webkitAudioContext
-      )();
+      window.checkUnitInterfaceCompatibility?.("wus-v02");
+      audioanalyser.audioCtx =
+        window.unitInterface?.audioContext ??
+        new (window.AudioContext || window.webkitAudioContext)();
       audioanalyser.analyser = audioanalyser.audioCtx.createAnalyser();
       audioanalyser.gainNode = audioanalyser.audioCtx.createGain();
       audioanalyser.gainNode.gain.value = 0.2;
@@ -33,6 +34,11 @@ function AudioAnalyser() {
         playAudio();
       }
       audioAnalyser.hasNewSong = true;
+    },
+    setSourceNode(sourceNode) {
+      audioanalyser.source = sourceNode;
+      audioanalyser.source.connect(audioanalyser.analyser);
+      audioAnalyser.hasNewSong = false;
     },
   };
 
