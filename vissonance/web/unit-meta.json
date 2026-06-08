@@ -3,7 +3,7 @@
   "unitType": "effect",
   "categoryHint": "visualizer",
   "preferredSize": "700,400",
-  "outputSignalTypes": "",
+  "outputSignalTypes": "audio",
   "inputSignalTypes": "audio",
   "unitTypesVersion": "0.2.4",
   "originalRepositoryUrl": "https://github.com/tariqksoliman/Vissonance.git",

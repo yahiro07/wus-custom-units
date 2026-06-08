@@ -12,10 +12,14 @@ if (!Detector.webgl) {
 
   if (window.unitInterface) {
     audioAnalyser.setSourceNode(unitInterface.primaryInputPort.audioInput.node);
+    unitInterface.primaryInputPort.audioInput.node.connect(
+      unitInterface.primaryOutputPort.audioOutput.node,
+    );
     window.unitInterface?.completeSetup({
       unitAspects: {
         unitType: "effect",
         categoryHint: "visualizer",
+        outputs: ["audio"],
         inputs: ["audio"],
       },
     });
