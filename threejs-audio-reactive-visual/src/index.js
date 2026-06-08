@@ -388,7 +388,7 @@ class App {
       const loader = new AudioLoader();
 
       loader.load(
-        "/music.mp3",
+        "https://cdn.jsdelivr.net/gh/kekkorider/threejs-audio-reactive-visual@6feb79deb79aa52ca4450fa97114b70ec3ac8c09/static/music.mp3",
         (buffer) => {
           const tl = new gsap.timeline({
             onComplete: () => {
