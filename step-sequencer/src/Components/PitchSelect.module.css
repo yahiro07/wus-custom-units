@@ -23,6 +23,7 @@
   border: 2px solid transparent;
   font-family: "Orbitron", sans-serif;
   font-size: 14px;
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }

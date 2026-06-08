@@ -25,6 +25,7 @@
   cursor: pointer;
   border: 2px solid transparent;
   font-family: "Orbitron", sans-serif;
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }

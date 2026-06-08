@@ -5,6 +5,7 @@
 
 .slider {
   margin: auto 1%;
+  appearance: none;
   -webkit-appearance: none;
   position: relative;
   overflow: hidden;
