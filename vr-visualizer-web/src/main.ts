@@ -1,4 +1,4 @@
-import { AudioEngine } from "./audio";
+import { AudioEngine, unitInterface } from "./audio";
 import { MilkdropVisualizer } from "./visualizer";
 import { VRRenderer } from "./vr";
 import { PresetBrowser } from "./preset-browser";
@@ -329,6 +329,17 @@ async function handleFile(file: File): Promise<void> {
   }
 }
 
+function handleConnectUnitStream() {
+  if (unitInterface) {
+    const {
+      primaryInputPort: { audioInput },
+      primaryOutputPort: { audioOutput },
+    } = unitInterface;
+    audio.connectUnitAudioStream(audioInput.node, audioOutput.node);
+    startVisualization();
+  }
+}
+
 async function handleTabCapture(): Promise<void> {
   statusEl.textContent = "Choose a tab to capture audio from...";
   statusEl.classList.remove("hidden");
@@ -364,7 +375,8 @@ fileInput.addEventListener("change", () => {
 });
 
 btnTab.addEventListener("click", () => handleTabCapture());
-btnMic.addEventListener("click", () => handleMicrophone());
+// btnMic.addEventListener("click", () => handleMicrophone());
+btnMic.addEventListener("click", () => handleConnectUnitStream());
 btnPrev.addEventListener("click", () => {
   milkdrop.prevPreset();
   presetBrowser.updateActiveHighlight();
@@ -506,3 +518,12 @@ if (!navigator.mediaDevices?.getDisplayMedia) {
     "Firefox does not support tab audio capture — use Chrome or Edge";
   btnTab.textContent = "Tab Audio (Chrome only)";
 }
+
+unitInterface?.completeSetup({
+  unitAspects: {
+    unitType: "effect",
+    categoryHint: "visualizer",
+    outputs: ["audio"],
+    inputs: ["audio"],
+  },
+});

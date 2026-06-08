@@ -3,13 +3,20 @@
  * Supports: local files, tab/screen capture (getDisplayMedia), microphone.
  */
 
+import { getUnitInterface } from "wus-unit-types";
+
 export type AudioSourceType = "file" | "tab" | "mic";
+
+export const unitInterface = getUnitInterface("wus-v02");
 
 export class AudioEngine {
   ctx: AudioContext | null = null;
   analyser: AnalyserNode | null = null;
-  sourceNode: MediaElementAudioSourceNode | MediaStreamAudioSourceNode | null =
-    null;
+  sourceNode:
+    | MediaElementAudioSourceNode
+    | MediaStreamAudioSourceNode
+    | AudioNode
+    | null = null;
   audioElement: HTMLAudioElement | null = null;
   private stream: MediaStream | null = null;
 
@@ -19,7 +26,7 @@ export class AudioEngine {
 
   private ensureContext(): AudioContext {
     if (!this.ctx) {
-      this.ctx = new AudioContext();
+      this.ctx = unitInterface?.audioContext ?? new AudioContext();
     }
     // Resume if suspended (browsers require user gesture)
     if (this.ctx.state === "suspended") {
@@ -78,6 +85,15 @@ export class AudioEngine {
     this.sourceNode = source;
 
     await audio.play();
+  }
+
+  connectUnitAudioStream(inputNode: AudioNode, outputNode: AudioNode) {
+    this.disconnectSource();
+    const ctx = this.ensureContext();
+    const analyser = this.createAnalyser(ctx);
+    inputNode.connect(analyser);
+    analyser.connect(outputNode);
+    this.sourceNode = inputNode;
   }
 
   /**
