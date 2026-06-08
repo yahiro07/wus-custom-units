@@ -22,7 +22,7 @@ body {
 #audio-btn {
   align-items: center;
   color: white;
-  background-color: #441F41;
+  background-color: #441f41;
   border: none;
   display: inline-flex;
   justify-content: center;
@@ -51,7 +51,7 @@ body {
   }
 
   &:hover {
-    background-color: lighten(#441F41, 5%);
+    background-color: lighten(#441f41, 5%);
 
     svg {
       transform: scale(1.2);
@@ -59,7 +59,6 @@ body {
   }
 
   &:active {
-
     svg {
       transform: scale(0.9);
     }
@@ -88,7 +87,7 @@ body {
 
   position: absolute;
   display: block;
-  background-color: #FBC40D;
+  background-color: #fbc40d;
   top: 0;
   left: 0;
   width: 100%;
@@ -112,6 +111,6 @@ body {
   width: min(100vw, 600px);
 
   a {
-    color: #FBC40D;
+    color: #fbc40d;
   }
 }
