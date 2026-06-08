@@ -48,6 +48,7 @@ const fileInput = document.getElementById("file-input") as HTMLInputElement;
 const btnFile = document.getElementById("btn-file") as HTMLButtonElement;
 const btnTab = document.getElementById("btn-tab") as HTMLButtonElement;
 const btnMic = document.getElementById("btn-mic") as HTMLButtonElement;
+const btnUnit = document.getElementById("btn-unit") as HTMLButtonElement;
 const btnPrev = document.getElementById("btn-preset-prev") as HTMLButtonElement;
 const btnNext = document.getElementById("btn-preset-next") as HTMLButtonElement;
 const btnVR = document.getElementById("btn-vr") as HTMLButtonElement;
@@ -375,8 +376,8 @@ fileInput.addEventListener("change", () => {
 });
 
 btnTab.addEventListener("click", () => handleTabCapture());
-// btnMic.addEventListener("click", () => handleMicrophone());
-btnMic.addEventListener("click", () => handleConnectUnitStream());
+btnMic.addEventListener("click", () => handleMicrophone());
+btnUnit.addEventListener("click", () => handleConnectUnitStream());
 btnPrev.addEventListener("click", () => {
   milkdrop.prevPreset();
   presetBrowser.updateActiveHighlight();
@@ -423,7 +424,6 @@ dropZone.addEventListener("drop", (e) => {
 });
 
 // --- Keyboard shortcuts ---
-
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowRight":
@@ -517,6 +517,14 @@ if (!navigator.mediaDevices?.getDisplayMedia) {
   btnTab.title =
     "Firefox does not support tab audio capture — use Chrome or Edge";
   btnTab.textContent = "Tab Audio (Chrome only)";
+}
+
+if (unitInterface) {
+  btnFile.style.display = "none";
+  btnTab.style.display = "none";
+  btnMic.style.display = "none";
+} else {
+  btnUnit.style.display = "none";
 }
 
 unitInterface?.completeSetup({
