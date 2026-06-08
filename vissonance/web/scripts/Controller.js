@@ -31,32 +31,20 @@ function Controller() {
       var list = $("<ul></ul>");
       $("#selector").append(list);
 
-      $("body").mousemove(function () {
-        $("#selector")
+      function setupElementFadeout(id, opacityTo, delay, duration) {
+        $(id)
           .stop()
-          .animate({ opacity: 1 }, 150, function () {
+          .animate({ opacity: 1 }, 150, () => {
             setTimeout(function () {
-              $("#selector").stop().animate(
-                {
-                  opacity: 0,
-                },
-                5000,
-              );
-            }, 2000);
+              $(id).stop().animate({ opacity: opacityTo }, duration);
+            }, delay);
           });
+      }
 
-        $("#audioname")
-          .stop()
-          .animate({ opacity: 1 }, 150, function () {
-            setTimeout(function () {
-              $("#audioname").stop().animate(
-                {
-                  opacity: 0.1,
-                },
-                12500,
-              );
-            }, 7000);
-          });
+      $("body").mousemove(function () {
+        setupElementFadeout("#selector", 0, 2000, 5000);
+        setupElementFadeout("#audioname", 0.1, 7000, 12500);
+        // setupElementFadeout("#title", 0, 2000, 5000);
       });
 
       var vizkeys = Object.keys(controller.visualizers);
