@@ -11,7 +11,8 @@
   "dependencies": {
     "butterchurn": "^2.6.7",
     "butterchurn-presets": "^2.4.7",
-    "three": "^0.184.0"
+    "three": "^0.184.0",
+    "wus-unit-types": "^0.2.4"
   },
   "devDependencies": {
     "@types/three": "^0.184.0",
