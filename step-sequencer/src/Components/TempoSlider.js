@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./TempoSlider.module.css";
 
-const TempoSlider = props => (
+const TempoSlider = (props) => (
   <div className={styles.root}>
     <input
       type="range"
@@ -9,7 +9,7 @@ const TempoSlider = props => (
       max="300"
       value={props.tempo}
       className={styles.slider}
-      onChange={e => {
+      onChange={(e) => {
         props.onTempoChange(e.target.value);
       }}
     />

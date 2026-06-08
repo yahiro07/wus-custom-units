@@ -10,6 +10,7 @@
   align-items: flex-end;
   position: relative;
 }
+
 .info {
   margin-top: 3%;
   font-size: 12px;
@@ -17,9 +18,11 @@
   position: absolute;
   right: 5px;
 }
+
 .landscape {
   display: none;
 }
+
 @media (min-width: 500px) {
   .root {
     font-size: 40px;

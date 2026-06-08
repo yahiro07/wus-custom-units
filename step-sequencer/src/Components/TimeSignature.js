@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "./TimeSignature.module.css";
 
-const TimeSignature = props => (
+const TimeSignature = (props) => (
   <div className={styles.root}>
     <select
       name="length"
       id="row-length"
       className={styles.length}
       value={props.sequenceLength}
-      onChange={e => {
+      onChange={(e) => {
         props.onLengthChange(e.target.value);
       }}
     >

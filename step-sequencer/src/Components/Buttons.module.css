@@ -6,12 +6,15 @@
   margin-bottom: 1%;
   justify-content: space-between;
 }
+
 .wrapperTop {
   display: inline-flex;
 }
+
 .wrapperBottom {
   display: inline-flex;
 }
+
 @media (max-width: 640px) {
   .root {
     display: grid;

@@ -9,10 +9,12 @@
   color: white;
   align-items: center;
 }
+
 .label {
   width: 60px;
   margin: auto;
 }
+
 @media (min-width: 900px) {
   .root {
     width: 60px;

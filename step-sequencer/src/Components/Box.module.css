@@ -27,9 +27,11 @@
 .checked:hover {
   background: #f2ffe2;
 }
+
 .active {
   background: #47474f;
 }
+
 .activechecked {
   background: #e3ffc1;
 }

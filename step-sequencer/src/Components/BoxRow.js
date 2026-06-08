@@ -3,7 +3,7 @@ import styles from "./BoxRow.module.css";
 import PitchSelect from "./PitchSelect";
 import Box from "./Box";
 
-const BoxRow = props => (
+const BoxRow = (props) => (
   <div className={styles.root}>
     <PitchSelect
       onPitchSelect={props.onPitchSelect}

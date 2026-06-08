@@ -7,7 +7,7 @@ import TapTempo from "./TapTempo";
 import ResetButton from "./ResetButton";
 import styles from "./Buttons.module.css";
 
-const Buttons = props => (
+const Buttons = (props) => (
   <div id="buttons" className={styles.root}>
     <div className={styles.wrapperTop}>
       <PlayButton

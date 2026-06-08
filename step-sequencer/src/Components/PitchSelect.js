@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "./PitchSelect.module.css";
 
-const PitchSelect = props => (
+const PitchSelect = (props) => (
   <div className={styles.root}>
     <select
       name="pitch"
       id="pitch"
       className={styles.select}
       value={props.notes[props.row]}
-      onChange={e => {
+      onChange={(e) => {
         props.onPitchSelect(e.target.value, props.row);
       }}
     >

@@ -2,7 +2,7 @@ import React from "react";
 import BoxRow from "./BoxRow";
 import styles from "./StepSequence.module.css";
 
-const StepSequence = props => (
+const StepSequence = (props) => (
   <div id="step-sequence" className={styles.root}>
     <BoxRow
       checked={props.checked}
