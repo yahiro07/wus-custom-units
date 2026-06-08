@@ -7,7 +7,7 @@
 </p> -->
 
 <a href="https://sam-parsons.github.io/step-sequencer">
-  <img src="./assets/screenshot.gif" alt="screenshot" width="100%" />
+  <img src="https://cdn.jsdelivr.net/gh/sam-parsons/step-sequencer@master/assets/screenshot.gif" alt="screenshot" width="100%" />
 </a>
 
 <br>
