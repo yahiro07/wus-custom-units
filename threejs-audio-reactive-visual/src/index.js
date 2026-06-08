@@ -221,7 +221,7 @@ class App {
   }
 
   _createSphere() {
-    const geom = new SphereGeometry(2, 32, 16);
+    const geom = new SphereGeometry(2, 32, 16).toNonIndexed();
 
     const mat = new MeshBasicMaterial({
       color: 0xffffff,
