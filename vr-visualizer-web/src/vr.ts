@@ -6,12 +6,12 @@
  * - VR controller input for presets, params, and mode toggles
  */
 
-import * as THREE from 'three';
-import { dbg } from './debug';
-import type { MilkdropVisualizer } from './visualizer';
-import type { AudioEngine } from './audio';
-import type { BeatDetector } from './beat-detector';
-import { VRControls } from './vr-controls';
+import * as THREE from "three";
+import { dbg } from "./debug";
+import type { MilkdropVisualizer } from "./visualizer";
+import type { AudioEngine } from "./audio";
+import type { BeatDetector } from "./beat-detector";
+import { VRControls } from "./vr-controls";
 
 const BASE_RADIUS = 200;
 const PULSE_AMOUNT = 120; // max radius change from bass — big and obvious
@@ -33,7 +33,12 @@ export class VRRenderer {
   private smoothBass = 0; // smoothed bass value for pulsing
   private beatDetector: BeatDetector;
 
-  constructor(threeCanvas: HTMLCanvasElement, milkdrop: MilkdropVisualizer, audio: AudioEngine, beatDetector: BeatDetector) {
+  constructor(
+    threeCanvas: HTMLCanvasElement,
+    milkdrop: MilkdropVisualizer,
+    audio: AudioEngine,
+    beatDetector: BeatDetector,
+  ) {
     this.threeCanvas = threeCanvas;
     this.milkdrop = milkdrop;
     this.audio = audio;
@@ -44,7 +49,9 @@ export class VRRenderer {
     // Pre-allocate frequency data buffer
     this.freqData = new Uint8Array(64);
 
-    dbg(`[VR] Constructor — snapshot: ${snapshotCanvas.width}x${snapshotCanvas.height}`);
+    dbg(
+      `[VR] Constructor — snapshot: ${snapshotCanvas.width}x${snapshotCanvas.height}`,
+    );
 
     // Renderer — alpha:true needed for passthrough
     this.renderer = new THREE.WebGLRenderer({
@@ -60,7 +67,12 @@ export class VRRenderer {
     this.scene = new THREE.Scene();
 
     // Camera
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000,
+    );
     this.camera.position.set(0, 0, 0);
 
     // Texture from the 2D snapshot canvas
@@ -79,8 +91,8 @@ export class VRRenderer {
     this.sphere.rotation.y = Math.PI * 1.5; // center content in front of user
     this.scene.add(this.sphere);
 
-    window.addEventListener('resize', () => this.onResize());
-    dbg('[VR] Scene ready');
+    window.addEventListener("resize", () => this.onResize());
+    dbg("[VR] Scene ready");
   }
 
   private onResize(): void {
@@ -110,7 +122,7 @@ export class VRRenderer {
       this.scene.background = null;
       // Transparent clear so passthrough shows through
       this.renderer.setClearColor(0x000000, 0);
-      dbg('[VR] Passthrough ON — additive blend');
+      dbg("[VR] Passthrough ON — additive blend");
     } else {
       this.sphereMaterial.blending = THREE.NormalBlending;
       this.sphereMaterial.opacity = 1.0;
@@ -118,30 +130,32 @@ export class VRRenderer {
       this.sphereMaterial.depthWrite = true;
       this.scene.background = new THREE.Color(0x000000);
       this.renderer.setClearColor(0x000000, 1);
-      dbg('[VR] Passthrough OFF — normal');
+      dbg("[VR] Passthrough OFF — normal");
     }
     this.sphereMaterial.needsUpdate = true;
   }
 
   async enterVR(): Promise<void> {
-    dbg('[VR] Requesting XR session with passthrough...');
+    dbg("[VR] Requesting XR session with passthrough...");
     // Request immersive-vr with passthrough feature for Quest 3
     // The passthrough feature allows toggling camera passthrough on/off
-    const session = await navigator.xr!.requestSession('immersive-vr', {
-      optionalFeatures: ['local-floor', 'bounded-floor'],
-      requiredFeatures: ['passthrough'],
-    }).catch(async () => {
-      // Fallback without passthrough requirement
-      dbg('[VR] Passthrough not available, falling back to standard VR');
-      return navigator.xr!.requestSession('immersive-vr', {
-        optionalFeatures: ['local-floor', 'bounded-floor'],
+    const session = await navigator
+      .xr!.requestSession("immersive-vr", {
+        optionalFeatures: ["local-floor", "bounded-floor"],
+        requiredFeatures: ["passthrough"],
+      })
+      .catch(async () => {
+        // Fallback without passthrough requirement
+        dbg("[VR] Passthrough not available, falling back to standard VR");
+        return navigator.xr!.requestSession("immersive-vr", {
+          optionalFeatures: ["local-floor", "bounded-floor"],
+        });
       });
-    });
-    dbg('[VR] Got XR session');
+    dbg("[VR] Got XR session");
     this.controls.attach(session);
     this.renderer.xr.setSession(session);
-    this.threeCanvas.style.display = 'block';
-    dbg('[VR] Session active');
+    this.threeCanvas.style.display = "block";
+    dbg("[VR] Session active");
   }
 
   render(): void {
@@ -159,24 +173,24 @@ export class VRRenderer {
     // Apply thumbstick based on active mode
     const scale = 0.01;
     switch (input.mode) {
-      case 'zoom-rot':
+      case "zoom-rot":
         o.zoomDelta = input.stickY * 0.02;
         o.rotDelta = input.stickX * 0.05;
         break;
-      case 'warp-decay':
+      case "warp-decay":
         o.warpOffset += input.stickY * scale * 2;
         o.decayOffset += input.stickX * scale * 0.1;
         break;
-      case 'color':
+      case "color":
         o.waveROffset += input.stickX * scale;
         o.waveBOffset -= input.stickX * scale;
         o.waveGOffset += input.stickY * scale;
         break;
-      case 'gamma-scale':
+      case "gamma-scale":
         o.gammaOffset += input.stickY * scale * 2;
         o.waveScaleOffset += input.stickX * scale * 2;
         break;
-      case 'navigate':
+      case "navigate":
         o.zoomDelta = 0;
         o.rotDelta = 0;
         break;
@@ -184,7 +198,7 @@ export class VRRenderer {
 
     if (input.resetParams) {
       this.milkdrop.resetOverrides();
-      dbg('[Controls] All params reset');
+      dbg("[Controls] All params reset");
     }
 
     this.beatDetector.update();
@@ -200,7 +214,7 @@ export class VRRenderer {
     } else {
       this.smoothBass += (rawBass - this.smoothBass) * 0.08; // slow decay
     }
-    const pulseScale = 1.0 + (this.smoothBass * PULSE_AMOUNT / BASE_RADIUS);
+    const pulseScale = 1.0 + (this.smoothBass * PULSE_AMOUNT) / BASE_RADIUS;
     this.sphere.scale.setScalar(pulseScale);
 
     this.texture.needsUpdate = true;
@@ -208,12 +222,14 @@ export class VRRenderer {
 
     this.frameCount++;
     if (this.frameCount <= 5 || this.frameCount % 60 === 0) {
-      dbg(`[VR] frame ${this.frameCount} | bass:${rawBass.toFixed(3)} smooth:${this.smoothBass.toFixed(3)} scale:${pulseScale.toFixed(3)}`);
+      dbg(
+        `[VR] frame ${this.frameCount} | bass:${rawBass.toFixed(3)} smooth:${this.smoothBass.toFixed(3)} scale:${pulseScale.toFixed(3)}`,
+      );
     }
   }
 
   start(): void {
-    dbg('[VR] Starting render loop');
+    dbg("[VR] Starting render loop");
     this.renderer.setAnimationLoop(() => {
       this.render();
     });

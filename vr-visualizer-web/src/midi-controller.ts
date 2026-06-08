@@ -8,7 +8,7 @@
  * Note messages: any note-on → next preset
  */
 
-import { dbg } from './debug';
+import { dbg } from "./debug";
 
 export interface MidiMapping {
   cc: number;
@@ -18,27 +18,27 @@ export interface MidiMapping {
 }
 
 const DEFAULT_MAPPINGS: MidiMapping[] = [
-  { cc: 1, param: 'zoomDelta', min: -0.05, max: 0.05 },
-  { cc: 2, param: 'rotDelta', min: -0.1, max: 0.1 },
-  { cc: 3, param: 'warpOffset', min: -0.5, max: 0.5 },
-  { cc: 4, param: 'decayOffset', min: -0.05, max: 0.05 },
-  { cc: 5, param: 'waveROffset', min: -0.5, max: 0.5 },
-  { cc: 6, param: 'waveGOffset', min: -0.5, max: 0.5 },
-  { cc: 7, param: 'waveBOffset', min: -0.5, max: 0.5 },
-  { cc: 8, param: 'gammaOffset', min: -1.0, max: 1.0 },
+  { cc: 1, param: "zoomDelta", min: -0.05, max: 0.05 },
+  { cc: 2, param: "rotDelta", min: -0.1, max: 0.1 },
+  { cc: 3, param: "warpOffset", min: -0.5, max: 0.5 },
+  { cc: 4, param: "decayOffset", min: -0.05, max: 0.05 },
+  { cc: 5, param: "waveROffset", min: -0.5, max: 0.5 },
+  { cc: 6, param: "waveGOffset", min: -0.5, max: 0.5 },
+  { cc: 7, param: "waveBOffset", min: -0.5, max: 0.5 },
+  { cc: 8, param: "gammaOffset", min: -1.0, max: 1.0 },
 ];
 
 /** Human-readable param names for MIDI learn UI */
 export const PARAM_LABELS: Record<string, string> = {
-  zoomDelta: 'Zoom',
-  rotDelta: 'Rotation',
-  warpOffset: 'Warp',
-  decayOffset: 'Trail Decay',
-  waveROffset: 'Red Color',
-  waveGOffset: 'Green Color',
-  waveBOffset: 'Blue Color',
-  gammaOffset: 'Brightness',
-  waveScaleOffset: 'Wave Scale',
+  zoomDelta: "Zoom",
+  rotDelta: "Rotation",
+  warpOffset: "Warp",
+  decayOffset: "Trail Decay",
+  waveROffset: "Red Color",
+  waveGOffset: "Green Color",
+  waveBOffset: "Blue Color",
+  gammaOffset: "Brightness",
+  waveScaleOffset: "Wave Scale",
 };
 
 /** All assignable params */
@@ -70,12 +70,12 @@ export class MidiController {
   onLearnComplete?: (cc: number, param: string) => void;
 
   static isSupported(): boolean {
-    return 'requestMIDIAccess' in navigator;
+    return "requestMIDIAccess" in navigator;
   }
 
   async connect(): Promise<void> {
     if (!MidiController.isSupported()) {
-      throw new Error('Web MIDI not supported in this browser');
+      throw new Error("Web MIDI not supported in this browser");
     }
 
     this.access = await navigator.requestMIDIAccess();
@@ -87,22 +87,23 @@ export class MidiController {
 
     this.access.onstatechange = (e: MIDIConnectionEvent) => {
       const port = e.port;
-      if (port && port.type === 'input') {
-        if (port.state === 'connected') {
+      if (port && port.type === "input") {
+        if (port.state === "connected") {
           this.attachInput(port as MIDIInput);
           dbg(`[MIDI] Device connected: ${port.name}`);
           this.connected = true;
-          this.onConnectionChange?.(true, port.name ?? 'Unknown');
+          this.onConnectionChange?.(true, port.name ?? "Unknown");
         } else {
           dbg(`[MIDI] Device disconnected: ${port.name}`);
           this.connected = false;
-          this.onConnectionChange?.(false, port.name ?? 'Unknown');
+          this.onConnectionChange?.(false, port.name ?? "Unknown");
         }
       }
     };
 
     if (this.access.inputs.size > 0) {
-      const firstName = this.access.inputs.values().next().value?.name ?? 'Unknown';
+      const firstName =
+        this.access.inputs.values().next().value?.name ?? "Unknown";
       this.connected = true;
       this.onConnectionChange?.(true, firstName);
     }
@@ -123,7 +124,9 @@ export class MidiController {
         if (this.learning && this.learnParam) {
           const range = PARAM_RANGES[this.learnParam] ?? [-0.5, 0.5];
           this.setMapping(cc, this.learnParam, range[0], range[1]);
-          dbg(`[MIDI] Learned: CC ${cc} → ${PARAM_LABELS[this.learnParam] ?? this.learnParam}`);
+          dbg(
+            `[MIDI] Learned: CC ${cc} → ${PARAM_LABELS[this.learnParam] ?? this.learnParam}`,
+          );
           this.onLearnComplete?.(cc, this.learnParam);
           this.learning = false;
           this.learnParam = null;
@@ -131,9 +134,10 @@ export class MidiController {
           return;
         }
 
-        const mapping = this.mappings.find(m => m.cc === cc);
+        const mapping = this.mappings.find((m) => m.cc === cc);
         if (mapping) {
-          const normalized = mapping.min + (value / 127) * (mapping.max - mapping.min);
+          const normalized =
+            mapping.min + (value / 127) * (mapping.max - mapping.min);
           this.onCC?.(mapping.param, normalized);
         }
       } else if (status === 0x90 && value > 0) {
@@ -146,7 +150,9 @@ export class MidiController {
   startLearn(param: string): void {
     this.learning = true;
     this.learnParam = param;
-    dbg(`[MIDI] Learn mode: turn a knob to assign it to ${PARAM_LABELS[param] ?? param}`);
+    dbg(
+      `[MIDI] Learn mode: turn a knob to assign it to ${PARAM_LABELS[param] ?? param}`,
+    );
   }
 
   cancelLearn(): void {
@@ -168,33 +174,37 @@ export class MidiController {
 
   /** Get the CC number currently assigned to a param, or null */
   getCCForParam(param: string): number | null {
-    const m = this.mappings.find(mp => mp.param === param);
+    const m = this.mappings.find((mp) => mp.param === param);
     return m ? m.cc : null;
   }
 
   setMapping(cc: number, param: string, min: number, max: number): void {
     // Remove any existing mapping for this param (one knob per param)
-    this.mappings = this.mappings.filter(m => m.param !== param);
+    this.mappings = this.mappings.filter((m) => m.param !== param);
     // Remove any existing mapping for this CC (one param per knob)
-    this.mappings = this.mappings.filter(m => m.cc !== cc);
+    this.mappings = this.mappings.filter((m) => m.cc !== cc);
     this.mappings.push({ cc, param, min, max });
   }
 
   private saveMappings(): void {
     try {
-      localStorage.setItem('midi-mappings', JSON.stringify(this.mappings));
-    } catch { /* ignore */ }
+      localStorage.setItem("midi-mappings", JSON.stringify(this.mappings));
+    } catch {
+      /* ignore */
+    }
   }
 
   loadMappings(): void {
     try {
-      const saved = localStorage.getItem('midi-mappings');
+      const saved = localStorage.getItem("midi-mappings");
       if (saved) this.mappings = JSON.parse(saved);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
 
   resetMappings(): void {
     this.mappings = [...DEFAULT_MAPPINGS];
-    localStorage.removeItem('midi-mappings');
+    localStorage.removeItem("midi-mappings");
   }
 }

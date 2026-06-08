@@ -3,10 +3,10 @@
  * Hover a preset to preview it live. Click to select. Star to favorite.
  */
 
-import type { MilkdropVisualizer } from './visualizer';
-import { buildShareURL } from './playlist';
+import type { MilkdropVisualizer } from "./visualizer";
+import { buildShareURL } from "./playlist";
 
-const STORAGE_KEY = 'milkdrop-favorites-only';
+const STORAGE_KEY = "milkdrop-favorites-only";
 
 export class PresetBrowser {
   private panel: HTMLDivElement;
@@ -23,44 +23,51 @@ export class PresetBrowser {
     this.milkdrop = milkdrop;
 
     // Restore favorites-only preference
-    milkdrop.useFavorites = localStorage.getItem(STORAGE_KEY) === '1';
+    milkdrop.useFavorites = localStorage.getItem(STORAGE_KEY) === "1";
 
     // Build panel using safe DOM methods
-    this.panel = document.createElement('div');
-    this.panel.id = 'preset-browser';
+    this.panel = document.createElement("div");
+    this.panel.id = "preset-browser";
 
-    const header = document.createElement('div');
-    header.className = 'pb-header';
+    const header = document.createElement("div");
+    header.className = "pb-header";
 
-    this.searchInput = document.createElement('input');
-    this.searchInput.type = 'text';
-    this.searchInput.id = 'pb-search';
-    this.searchInput.placeholder = 'Search presets...';
+    this.searchInput = document.createElement("input");
+    this.searchInput.type = "text";
+    this.searchInput.id = "pb-search";
+    this.searchInput.placeholder = "Search presets...";
 
-    this.favToggle = document.createElement('button');
-    this.favToggle.id = 'pb-fav-toggle';
-    this.favToggle.title = 'Toggle favorites only';
-    this.favToggle.textContent = '\u2605'; // ★
+    this.favToggle = document.createElement("button");
+    this.favToggle.id = "pb-fav-toggle";
+    this.favToggle.title = "Toggle favorites only";
+    this.favToggle.textContent = "\u2605"; // ★
 
-    const closeBtn = document.createElement('button');
-    closeBtn.id = 'pb-close';
-    closeBtn.title = 'Close';
-    closeBtn.textContent = '\u2715'; // ✕
+    const closeBtn = document.createElement("button");
+    closeBtn.id = "pb-close";
+    closeBtn.title = "Close";
+    closeBtn.textContent = "\u2715"; // ✕
 
-    const shareBtn = document.createElement('button');
-    shareBtn.id = 'pb-share';
-    shareBtn.title = 'Copy share link';
-    shareBtn.textContent = '\u{1F517}'; // 🔗
-    shareBtn.addEventListener('click', () => {
+    const shareBtn = document.createElement("button");
+    shareBtn.id = "pb-share";
+    shareBtn.title = "Copy share link";
+    shareBtn.textContent = "\u{1F517}"; // 🔗
+    shareBtn.addEventListener("click", () => {
       if (this.milkdrop.favorites.size === 0) {
-        shareBtn.textContent = 'No favs!';
-        setTimeout(() => { shareBtn.textContent = '\u{1F517}'; }, 2000);
+        shareBtn.textContent = "No favs!";
+        setTimeout(() => {
+          shareBtn.textContent = "\u{1F517}";
+        }, 2000);
         return;
       }
-      const url = buildShareURL(this.milkdrop.presetNames, this.milkdrop.favorites);
+      const url = buildShareURL(
+        this.milkdrop.presetNames,
+        this.milkdrop.favorites,
+      );
       navigator.clipboard.writeText(url).then(() => {
-        shareBtn.textContent = 'Copied!';
-        setTimeout(() => { shareBtn.textContent = '\u{1F517}'; }, 2000);
+        shareBtn.textContent = "Copied!";
+        setTimeout(() => {
+          shareBtn.textContent = "\u{1F517}";
+        }, 2000);
       });
     });
 
@@ -69,11 +76,11 @@ export class PresetBrowser {
     header.appendChild(closeBtn);
     header.appendChild(shareBtn);
 
-    this.statsEl = document.createElement('div');
-    this.statsEl.className = 'pb-stats';
+    this.statsEl = document.createElement("div");
+    this.statsEl.className = "pb-stats";
 
-    this.list = document.createElement('div');
-    this.list.className = 'pb-list';
+    this.list = document.createElement("div");
+    this.list.className = "pb-list";
 
     this.panel.appendChild(header);
     this.panel.appendChild(this.statsEl);
@@ -81,7 +88,7 @@ export class PresetBrowser {
     document.body.appendChild(this.panel);
 
     // Style
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       #preset-browser {
         position: fixed; top: 0; right: -380px; width: 380px; height: 100%;
@@ -140,9 +147,9 @@ export class PresetBrowser {
     document.head.appendChild(style);
 
     // Events
-    closeBtn.addEventListener('click', () => this.hide());
-    this.searchInput.addEventListener('input', () => this.filterList());
-    this.favToggle.addEventListener('click', () => this.toggleFavoritesOnly());
+    closeBtn.addEventListener("click", () => this.hide());
+    this.searchInput.addEventListener("input", () => this.filterList());
+    this.favToggle.addEventListener("click", () => this.toggleFavoritesOnly());
 
     this.updateFavToggle();
   }
@@ -150,24 +157,27 @@ export class PresetBrowser {
   populate(): void {
     this.list.replaceChildren();
     this.items.clear();
-    console.log(`[PresetBrowser] Populating with ${this.milkdrop.presetNames.length} presets`);
+    console.log(
+      `[PresetBrowser] Populating with ${this.milkdrop.presetNames.length} presets`,
+    );
 
     for (const name of this.milkdrop.presetNames) {
-      const item = document.createElement('div');
-      item.className = 'pb-item';
+      const item = document.createElement("div");
+      item.className = "pb-item";
 
-      const star = document.createElement('span');
-      star.className = 'pb-star' + (this.milkdrop.isFavorite(name) ? ' fav' : '');
-      star.textContent = '\u2605'; // ★
-      star.addEventListener('click', (e) => {
+      const star = document.createElement("span");
+      star.className =
+        "pb-star" + (this.milkdrop.isFavorite(name) ? " fav" : "");
+      star.textContent = "\u2605"; // ★
+      star.addEventListener("click", (e) => {
         e.stopPropagation();
         const isFav = this.milkdrop.toggleFavorite(name);
-        star.classList.toggle('fav', isFav);
+        star.classList.toggle("fav", isFav);
         this.updateStats();
       });
 
-      const label = document.createElement('span');
-      label.className = 'pb-name';
+      const label = document.createElement("span");
+      label.className = "pb-name";
       label.textContent = name;
       label.title = name;
 
@@ -175,7 +185,7 @@ export class PresetBrowser {
       item.appendChild(label);
 
       // Hover to preview
-      item.addEventListener('mouseenter', () => {
+      item.addEventListener("mouseenter", () => {
         if (this.presetBeforeHover === null) {
           this.presetBeforeHover = this.milkdrop.currentPresetName;
         }
@@ -183,7 +193,7 @@ export class PresetBrowser {
       });
 
       // Click to select
-      item.addEventListener('click', () => {
+      item.addEventListener("click", () => {
         this.presetBeforeHover = null;
         this.milkdrop.loadPresetByName(name, 0.5);
         this.updateActiveHighlight();
@@ -194,7 +204,7 @@ export class PresetBrowser {
     }
 
     // Restore previous on mouse leave
-    this.list.addEventListener('mouseleave', () => {
+    this.list.addEventListener("mouseleave", () => {
       if (this.presetBeforeHover !== null) {
         this.milkdrop.loadPresetByName(this.presetBeforeHover, 0.5);
         this.presetBeforeHover = null;
@@ -213,22 +223,22 @@ export class PresetBrowser {
     for (const [name, item] of this.items) {
       const match = name.toLowerCase().includes(query);
       const favOk = !filterByFav || this.milkdrop.isFavorite(name);
-      item.style.display = (match && favOk) ? 'flex' : 'none';
+      item.style.display = match && favOk ? "flex" : "none";
     }
   }
 
   private toggleFavoritesOnly(): void {
     this.milkdrop.useFavorites = !this.milkdrop.useFavorites;
-    localStorage.setItem(STORAGE_KEY, this.milkdrop.useFavorites ? '1' : '0');
+    localStorage.setItem(STORAGE_KEY, this.milkdrop.useFavorites ? "1" : "0");
     this.updateFavToggle();
     this.filterList();
   }
 
   private updateFavToggle(): void {
-    this.favToggle.classList.toggle('active', this.milkdrop.useFavorites);
+    this.favToggle.classList.toggle("active", this.milkdrop.useFavorites);
     this.favToggle.title = this.milkdrop.useFavorites
-      ? 'Showing favorites only \u2014 click to show all'
-      : 'Showing all \u2014 click for favorites only';
+      ? "Showing favorites only \u2014 click to show all"
+      : "Showing all \u2014 click for favorites only";
   }
 
   private updateStats(): void {
@@ -240,13 +250,13 @@ export class PresetBrowser {
   updateActiveHighlight(): void {
     const current = this.milkdrop.currentPresetName;
     for (const [name, item] of this.items) {
-      item.classList.toggle('active', name === current);
+      item.classList.toggle("active", name === current);
     }
   }
 
   show(): void {
     this.visible = true;
-    this.panel.classList.add('open');
+    this.panel.classList.add("open");
     this.filterList();
     this.updateActiveHighlight();
     this.searchInput.focus();
@@ -254,7 +264,7 @@ export class PresetBrowser {
 
   hide(): void {
     this.visible = false;
-    this.panel.classList.remove('open');
+    this.panel.classList.remove("open");
     if (this.presetBeforeHover !== null) {
       this.milkdrop.loadPresetByName(this.presetBeforeHover, 0.5);
       this.presetBeforeHover = null;
@@ -273,8 +283,8 @@ export class PresetBrowser {
       }
     }
     for (const [name, item] of this.items) {
-      const star = item.querySelector('.pb-star');
-      if (star) star.classList.toggle('fav', this.milkdrop.isFavorite(name));
+      const star = item.querySelector(".pb-star");
+      if (star) star.classList.toggle("fav", this.milkdrop.isFavorite(name));
     }
     this.updateStats();
   }

@@ -3,17 +3,18 @@
  * Supports: local files, tab/screen capture (getDisplayMedia), microphone.
  */
 
-export type AudioSourceType = 'file' | 'tab' | 'mic';
+export type AudioSourceType = "file" | "tab" | "mic";
 
 export class AudioEngine {
   ctx: AudioContext | null = null;
   analyser: AnalyserNode | null = null;
-  sourceNode: MediaElementAudioSourceNode | MediaStreamAudioSourceNode | null = null;
+  sourceNode: MediaElementAudioSourceNode | MediaStreamAudioSourceNode | null =
+    null;
   audioElement: HTMLAudioElement | null = null;
   private stream: MediaStream | null = null;
 
   get isActive(): boolean {
-    return this.analyser !== null && this.ctx?.state === 'running';
+    return this.analyser !== null && this.ctx?.state === "running";
   }
 
   private ensureContext(): AudioContext {
@@ -21,7 +22,7 @@ export class AudioEngine {
       this.ctx = new AudioContext();
     }
     // Resume if suspended (browsers require user gesture)
-    if (this.ctx.state === 'suspended') {
+    if (this.ctx.state === "suspended") {
       this.ctx.resume();
     }
     return this.ctx;
@@ -48,12 +49,12 @@ export class AudioEngine {
       this.analyser = null;
     }
     if (this.stream) {
-      this.stream.getTracks().forEach(t => t.stop());
+      this.stream.getTracks().forEach((t) => t.stop());
       this.stream = null;
     }
     if (this.audioElement) {
       this.audioElement.pause();
-      this.audioElement.src = '';
+      this.audioElement.src = "";
       this.audioElement = null;
     }
   }
@@ -66,7 +67,7 @@ export class AudioEngine {
 
     const url = URL.createObjectURL(file);
     const audio = new Audio();
-    audio.crossOrigin = 'anonymous';
+    audio.crossOrigin = "anonymous";
     audio.src = url;
     this.audioElement = audio;
 
@@ -101,10 +102,10 @@ export class AudioEngine {
     // Check we actually got an audio track
     const audioTracks = stream.getAudioTracks();
     if (audioTracks.length === 0) {
-      stream.getTracks().forEach(t => t.stop());
+      stream.getTracks().forEach((t) => t.stop());
       throw new Error(
-        'No audio track received. This only works when sharing a Chrome tab ' +
-        '(not a window or screen). Make sure to check "Share tab audio" in the dialog.'
+        "No audio track received. This only works when sharing a Chrome tab " +
+          '(not a window or screen). Make sure to check "Share tab audio" in the dialog.',
       );
     }
 
@@ -115,7 +116,7 @@ export class AudioEngine {
     this.sourceNode = source;
 
     // Stop visualizing if user stops sharing
-    stream.getVideoTracks()[0]?.addEventListener('ended', () => {
+    stream.getVideoTracks()[0]?.addEventListener("ended", () => {
       this.disconnectSource();
     });
   }

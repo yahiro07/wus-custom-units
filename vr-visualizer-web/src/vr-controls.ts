@@ -33,7 +33,7 @@
  *   Right trigger → reset all overrides
  */
 
-import { dbg } from './debug';
+import { dbg } from "./debug";
 
 export interface VRControlState {
   // Preset navigation
@@ -44,7 +44,7 @@ export interface VRControlState {
   togglePassthrough: boolean;
 
   // Which mode is active
-  mode: 'navigate' | 'zoom-rot' | 'warp-decay' | 'color' | 'gamma-scale';
+  mode: "navigate" | "zoom-rot" | "warp-decay" | "color" | "gamma-scale";
 
   // Analog values from left stick (-1 to 1)
   stickX: number;
@@ -60,7 +60,9 @@ export class VRControls {
 
   attach(session: XRSession): void {
     this.session = session;
-    dbg('[Controls] Attached — A/B/X/Y + left stick for params, stick flick for presets');
+    dbg(
+      "[Controls] Attached — A/B/X/Y + left stick for params, stick flick for presets",
+    );
   }
 
   poll(): VRControlState {
@@ -70,7 +72,7 @@ export class VRControls {
       randomPreset: false,
       resetParams: false,
       togglePassthrough: false,
-      mode: 'navigate',
+      mode: "navigate",
       stickX: 0,
       stickY: 0,
     };
@@ -78,10 +80,10 @@ export class VRControls {
     if (!this.session) return state;
 
     // Button states
-    let aHeld = false;  // right A
-    let bHeld = false;  // right B
-    let xHeld = false;  // left X
-    let yHeld = false;  // left Y
+    let aHeld = false; // right A
+    let bHeld = false; // right B
+    let xHeld = false; // left X
+    let yHeld = false; // left Y
     let rightTrigger = false;
     let leftTrigger = false;
     let stickX = 0;
@@ -92,13 +94,13 @@ export class VRControls {
       const axes = source.gamepad.axes;
       const buttons = source.gamepad.buttons;
 
-      if (source.handedness === 'right') {
+      if (source.handedness === "right") {
         aHeld = buttons.length > 4 && buttons[4].pressed;
         bHeld = buttons.length > 5 && buttons[5].pressed;
         rightTrigger = buttons.length > 0 && buttons[0].pressed;
       }
 
-      if (source.handedness === 'left') {
+      if (source.handedness === "left") {
         xHeld = buttons.length > 4 && buttons[4].pressed;
         yHeld = buttons.length > 5 && buttons[5].pressed;
         leftTrigger = buttons.length > 0 && buttons[0].pressed;
@@ -107,7 +109,8 @@ export class VRControls {
 
         // Left stick press → toggle passthrough (edge-triggered)
         const stickPress = buttons.length > 3 && buttons[3].pressed;
-        if (stickPress && !this.prevLeftStickPress) state.togglePassthrough = true;
+        if (stickPress && !this.prevLeftStickPress)
+          state.togglePassthrough = true;
         this.prevLeftStickPress = stickPress;
       }
     }
@@ -117,15 +120,15 @@ export class VRControls {
 
     // Determine mode based on held button
     if (aHeld) {
-      state.mode = 'zoom-rot';
+      state.mode = "zoom-rot";
     } else if (bHeld) {
-      state.mode = 'warp-decay';
+      state.mode = "warp-decay";
     } else if (xHeld) {
-      state.mode = 'color';
+      state.mode = "color";
     } else if (yHeld) {
-      state.mode = 'gamma-scale';
+      state.mode = "gamma-scale";
     } else {
-      state.mode = 'navigate';
+      state.mode = "navigate";
 
       // Preset switching — edge-triggered on left stick X (only in navigate mode)
       if (stickX > 0.7 && this.prevStickX <= 0.7) state.nextPreset = true;

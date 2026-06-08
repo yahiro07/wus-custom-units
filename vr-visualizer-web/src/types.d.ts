@@ -1,4 +1,4 @@
-declare module 'butterchurn' {
+declare module "butterchurn" {
   interface ButterchurnVisualizer {
     connectAudio(node: AudioNode): void;
     loadPreset(preset: any, blendTime: number): void;
@@ -11,7 +11,7 @@ declare module 'butterchurn' {
     createVisualizer(
       audioContext: AudioContext,
       canvas: HTMLCanvasElement,
-      options: { width: number; height: number; pixelRatio?: number }
+      options: { width: number; height: number; pixelRatio?: number },
     ): ButterchurnVisualizer;
     isSupported(): boolean;
   }
@@ -20,7 +20,7 @@ declare module 'butterchurn' {
   export default butterchurn;
 }
 
-declare module 'butterchurn-presets' {
+declare module "butterchurn-presets" {
   interface ButterchurnPresets {
     getPresets(): Record<string, any>;
   }

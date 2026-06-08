@@ -1,47 +1,57 @@
-import { AudioEngine } from './audio';
-import { MilkdropVisualizer } from './visualizer';
-import { VRRenderer } from './vr';
-import { PresetBrowser } from './preset-browser';
-import { dbg, enableDebug } from './debug';
-import { BeatDetector } from './beat-detector';
-import { TouchControls } from './touch-controls';
-import { MidiController, PARAM_LABELS, ASSIGNABLE_PARAMS } from './midi-controller';
-import { getPlaylistFromURL, decodePlaylist, buildShareURL } from './playlist';
-import { HelpOverlay } from './help-overlay';
+import { AudioEngine } from "./audio";
+import { MilkdropVisualizer } from "./visualizer";
+import { VRRenderer } from "./vr";
+import { PresetBrowser } from "./preset-browser";
+import { dbg, enableDebug } from "./debug";
+import { BeatDetector } from "./beat-detector";
+import { TouchControls } from "./touch-controls";
+import {
+  MidiController,
+  PARAM_LABELS,
+  ASSIGNABLE_PARAMS,
+} from "./midi-controller";
+import { getPlaylistFromURL, decodePlaylist, buildShareURL } from "./playlist";
+import { HelpOverlay } from "./help-overlay";
 
 // Enable debug overlay with ?debug in URL
-if (window.location.search.includes('debug')) {
+if (window.location.search.includes("debug")) {
   enableDebug();
-  dbg('Debug mode enabled');
+  dbg("Debug mode enabled");
 }
 
 // --- Seizure warning ---
-const warningEl = document.getElementById('seizure-warning') as HTMLDivElement;
-const btnAccept = document.getElementById('btn-accept-warning') as HTMLButtonElement;
+const warningEl = document.getElementById("seizure-warning") as HTMLDivElement;
+const btnAccept = document.getElementById(
+  "btn-accept-warning",
+) as HTMLButtonElement;
 
-if (!localStorage.getItem('seizure-warning-accepted')) {
-  warningEl.style.display = 'flex';
-  btnAccept.addEventListener('click', () => {
-    localStorage.setItem('seizure-warning-accepted', '1');
-    warningEl.style.display = 'none';
+if (!localStorage.getItem("seizure-warning-accepted")) {
+  warningEl.style.display = "flex";
+  btnAccept.addEventListener("click", () => {
+    localStorage.setItem("seizure-warning-accepted", "1");
+    warningEl.style.display = "none";
   });
 }
 
 // DOM elements
-const milkdropCanvas = document.getElementById('milkdrop-canvas') as HTMLCanvasElement;
-const threeCanvas = document.getElementById('three-canvas') as HTMLCanvasElement;
-const statusEl = document.getElementById('status') as HTMLDivElement;
-const presetNameEl = document.getElementById('preset-name') as HTMLDivElement;
-const dropZone = document.getElementById('drop-zone') as HTMLDivElement;
-const fileInput = document.getElementById('file-input') as HTMLInputElement;
+const milkdropCanvas = document.getElementById(
+  "milkdrop-canvas",
+) as HTMLCanvasElement;
+const threeCanvas = document.getElementById(
+  "three-canvas",
+) as HTMLCanvasElement;
+const statusEl = document.getElementById("status") as HTMLDivElement;
+const presetNameEl = document.getElementById("preset-name") as HTMLDivElement;
+const dropZone = document.getElementById("drop-zone") as HTMLDivElement;
+const fileInput = document.getElementById("file-input") as HTMLInputElement;
 
-const btnFile = document.getElementById('btn-file') as HTMLButtonElement;
-const btnTab = document.getElementById('btn-tab') as HTMLButtonElement;
-const btnMic = document.getElementById('btn-mic') as HTMLButtonElement;
-const btnPrev = document.getElementById('btn-preset-prev') as HTMLButtonElement;
-const btnNext = document.getElementById('btn-preset-next') as HTMLButtonElement;
-const btnVR = document.getElementById('btn-vr') as HTMLButtonElement;
-const btnBrowse = document.getElementById('btn-browse') as HTMLButtonElement;
+const btnFile = document.getElementById("btn-file") as HTMLButtonElement;
+const btnTab = document.getElementById("btn-tab") as HTMLButtonElement;
+const btnMic = document.getElementById("btn-mic") as HTMLButtonElement;
+const btnPrev = document.getElementById("btn-preset-prev") as HTMLButtonElement;
+const btnNext = document.getElementById("btn-preset-next") as HTMLButtonElement;
+const btnVR = document.getElementById("btn-vr") as HTMLButtonElement;
+const btnBrowse = document.getElementById("btn-browse") as HTMLButtonElement;
 
 // Core modules
 const audio = new AudioEngine();
@@ -53,23 +63,32 @@ const helpOverlay = new HelpOverlay();
 // Mobile touch controls
 const touch = new TouchControls();
 touch.attach(milkdropCanvas);
-touch.onSwipeLeft = () => { milkdrop.nextPreset(); presetBrowser.updateActiveHighlight(); };
-touch.onSwipeRight = () => { milkdrop.prevPreset(); presetBrowser.updateActiveHighlight(); };
+touch.onSwipeLeft = () => {
+  milkdrop.nextPreset();
+  presetBrowser.updateActiveHighlight();
+};
+touch.onSwipeRight = () => {
+  milkdrop.prevPreset();
+  presetBrowser.updateActiveHighlight();
+};
 touch.onSwipeUp = () => presetBrowser.show();
 touch.onSwipeDown = () => presetBrowser.hide();
-touch.onDoubleTap = () => { milkdrop.randomPreset(); presetBrowser.updateActiveHighlight(); };
+touch.onDoubleTap = () => {
+  milkdrop.randomPreset();
+  presetBrowser.updateActiveHighlight();
+};
 touch.onTap = () => {
-  const controls = document.getElementById('controls')!;
-  controls.style.opacity = controls.style.opacity === '0' ? '1' : '0';
+  const controls = document.getElementById("controls")!;
+  controls.style.opacity = controls.style.opacity === "0" ? "1" : "0";
 };
 
 // MIDI learn menu
 function showMidiLearnMenu(midiCtrl: MidiController): void {
   // Remove existing menu if any
-  document.getElementById('midi-learn-menu')?.remove();
+  document.getElementById("midi-learn-menu")?.remove();
 
-  const menu = document.createElement('div');
-  menu.id = 'midi-learn-menu';
+  const menu = document.createElement("div");
+  menu.id = "midi-learn-menu";
   menu.style.cssText = `
     position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
     z-index: 40; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.15);
@@ -77,36 +96,41 @@ function showMidiLearnMenu(midiCtrl: MidiController): void {
     font-size: 13px; min-width: 280px;
   `;
 
-  const title = document.createElement('div');
-  title.style.cssText = 'font-size: 14px; margin-bottom: 12px; color: rgba(255,255,255,0.7);';
-  title.textContent = 'MIDI Learn — pick a parameter, then turn a knob';
+  const title = document.createElement("div");
+  title.style.cssText =
+    "font-size: 14px; margin-bottom: 12px; color: rgba(255,255,255,0.7);";
+  title.textContent = "MIDI Learn — pick a parameter, then turn a knob";
   menu.appendChild(title);
 
   for (const param of ASSIGNABLE_PARAMS) {
-    const row = document.createElement('div');
+    const row = document.createElement("div");
     row.style.cssText = `
       display: flex; justify-content: space-between; align-items: center;
       padding: 6px 8px; cursor: pointer; border-radius: 6px; margin: 2px 0;
     `;
-    row.addEventListener('mouseenter', () => { row.style.background = 'rgba(255,255,255,0.08)'; });
-    row.addEventListener('mouseleave', () => { row.style.background = 'none'; });
+    row.addEventListener("mouseenter", () => {
+      row.style.background = "rgba(255,255,255,0.08)";
+    });
+    row.addEventListener("mouseleave", () => {
+      row.style.background = "none";
+    });
 
-    const label = document.createElement('span');
+    const label = document.createElement("span");
     label.textContent = PARAM_LABELS[param] ?? param;
-    label.style.color = '#fff';
+    label.style.color = "#fff";
 
-    const ccLabel = document.createElement('span');
+    const ccLabel = document.createElement("span");
     const cc = midiCtrl.getCCForParam(param);
-    ccLabel.textContent = cc !== null ? `CC ${cc}` : 'not assigned';
-    ccLabel.style.cssText = `color: ${cc !== null ? 'rgba(100,200,100,0.7)' : 'rgba(255,255,255,0.3)'}; font-size: 12px;`;
+    ccLabel.textContent = cc !== null ? `CC ${cc}` : "not assigned";
+    ccLabel.style.cssText = `color: ${cc !== null ? "rgba(100,200,100,0.7)" : "rgba(255,255,255,0.3)"}; font-size: 12px;`;
 
     row.appendChild(label);
     row.appendChild(ccLabel);
 
-    row.addEventListener('click', () => {
+    row.addEventListener("click", () => {
       midiCtrl.startLearn(param);
       statusEl.textContent = `Turn a knob to assign it to "${PARAM_LABELS[param]}"...`;
-      statusEl.classList.remove('hidden');
+      statusEl.classList.remove("hidden");
       menu.remove();
     });
 
@@ -114,16 +138,17 @@ function showMidiLearnMenu(midiCtrl: MidiController): void {
   }
 
   // Reset button
-  const resetRow = document.createElement('div');
-  resetRow.style.cssText = 'margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);';
-  const resetBtn = document.createElement('button');
-  resetBtn.textContent = 'Reset to defaults';
-  resetBtn.style.cssText = 'font-size: 12px; padding: 4px 12px; opacity: 0.5;';
-  resetBtn.addEventListener('click', () => {
+  const resetRow = document.createElement("div");
+  resetRow.style.cssText =
+    "margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);";
+  const resetBtn = document.createElement("button");
+  resetBtn.textContent = "Reset to defaults";
+  resetBtn.style.cssText = "font-size: 12px; padding: 4px 12px; opacity: 0.5;";
+  resetBtn.addEventListener("click", () => {
     midiCtrl.resetMappings();
-    statusEl.textContent = 'MIDI mappings reset to defaults';
-    statusEl.classList.remove('hidden');
-    setTimeout(() => statusEl.classList.add('hidden'), 2000);
+    statusEl.textContent = "MIDI mappings reset to defaults";
+    statusEl.classList.remove("hidden");
+    setTimeout(() => statusEl.classList.add("hidden"), 2000);
     menu.remove();
   });
   resetRow.appendChild(resetBtn);
@@ -133,30 +158,31 @@ function showMidiLearnMenu(midiCtrl: MidiController): void {
   const closeHandler = (e: MouseEvent) => {
     if (!menu.contains(e.target as Node) && e.target !== btnMidi) {
       menu.remove();
-      document.removeEventListener('click', closeHandler);
+      document.removeEventListener("click", closeHandler);
     }
   };
-  setTimeout(() => document.addEventListener('click', closeHandler), 0);
+  setTimeout(() => document.addEventListener("click", closeHandler), 0);
 
   document.body.appendChild(menu);
 }
 
 // MIDI controller
-const btnMidi = document.getElementById('btn-midi') as HTMLButtonElement;
+const btnMidi = document.getElementById("btn-midi") as HTMLButtonElement;
 let midi: MidiController | null = null;
 
 if (MidiController.isSupported()) {
-  btnMidi.style.display = 'block';
-  btnMidi.title = 'Connect a USB DJ controller or MIDI device to control visuals with knobs and buttons';
-  btnMidi.addEventListener('click', async () => {
+  btnMidi.style.display = "block";
+  btnMidi.title =
+    "Connect a USB DJ controller or MIDI device to control visuals with knobs and buttons";
+  btnMidi.addEventListener("click", async () => {
     // If already connected, show MIDI learn menu
     if (midi && midi.isConnected()) {
       showMidiLearnMenu(midi);
       return;
     }
     if (midi) return;
-    statusEl.textContent = 'Looking for MIDI devices...';
-    statusEl.classList.remove('hidden');
+    statusEl.textContent = "Looking for MIDI devices...";
+    statusEl.classList.remove("hidden");
     midi = new MidiController();
     midi.loadMappings();
     midi.onCC = (param, value) => {
@@ -167,48 +193,51 @@ if (MidiController.isSupported()) {
       presetBrowser.updateActiveHighlight();
     };
     midi.onConnectionChange = (connected, name) => {
-      btnMidi.classList.toggle('active', connected);
+      btnMidi.classList.toggle("active", connected);
       btnMidi.title = connected
         ? `Connected: ${name} — knobs control zoom, warp, colors. Keys change presets.`
-        : 'Connect a USB DJ controller or MIDI device to control visuals with knobs and buttons';
+        : "Connect a USB DJ controller or MIDI device to control visuals with knobs and buttons";
       statusEl.textContent = connected
         ? `MIDI connected: ${name}. Turn knobs to control visuals!`
         : `MIDI disconnected: ${name}`;
-      statusEl.classList.remove('hidden');
-      setTimeout(() => statusEl.classList.add('hidden'), 4000);
+      statusEl.classList.remove("hidden");
+      setTimeout(() => statusEl.classList.add("hidden"), 4000);
     };
     midi.onLearnComplete = (cc, param) => {
       statusEl.textContent = `Mapped knob (CC ${cc}) → ${PARAM_LABELS[param] ?? param}`;
-      statusEl.classList.remove('hidden');
-      setTimeout(() => statusEl.classList.add('hidden'), 3000);
+      statusEl.classList.remove("hidden");
+      setTimeout(() => statusEl.classList.add("hidden"), 3000);
     };
     try {
       await midi.connect();
       if (!midi.isConnected()) {
-        statusEl.textContent = 'No MIDI devices found. Plug in a controller and try again.';
-        setTimeout(() => statusEl.classList.add('hidden'), 4000);
+        statusEl.textContent =
+          "No MIDI devices found. Plug in a controller and try again.";
+        setTimeout(() => statusEl.classList.add("hidden"), 4000);
       }
     } catch (err) {
       statusEl.textContent = `MIDI error: ${err}`;
-      setTimeout(() => statusEl.classList.add('hidden'), 4000);
+      setTimeout(() => statusEl.classList.add("hidden"), 4000);
     }
   });
 }
 
 // Share button
-const btnShare = document.getElementById('btn-share') as HTMLButtonElement;
-btnShare.addEventListener('click', () => {
+const btnShare = document.getElementById("btn-share") as HTMLButtonElement;
+btnShare.addEventListener("click", () => {
   if (milkdrop.favorites.size === 0) {
-    statusEl.textContent = 'Favorite some presets first, then share!';
-    statusEl.classList.remove('hidden');
-    setTimeout(() => statusEl.classList.add('hidden'), 3000);
+    statusEl.textContent = "Favorite some presets first, then share!";
+    statusEl.classList.remove("hidden");
+    setTimeout(() => statusEl.classList.add("hidden"), 3000);
     return;
   }
   milkdrop.initPresetList();
   const url = buildShareURL(milkdrop.presetNames, milkdrop.favorites);
   navigator.clipboard.writeText(url).then(() => {
-    btnShare.textContent = 'Copied!';
-    setTimeout(() => { btnShare.textContent = 'Share'; }, 2000);
+    btnShare.textContent = "Copied!";
+    setTimeout(() => {
+      btnShare.textContent = "Share";
+    }, 2000);
   });
 });
 
@@ -227,8 +256,10 @@ function startVisualization(): void {
   milkdrop.onPresetChange = (name) => {
     presetNameEl.textContent = name;
     // Fade out preset name after a few seconds
-    presetNameEl.style.opacity = '0.7';
-    setTimeout(() => { presetNameEl.style.opacity = '0'; }, 3000);
+    presetNameEl.style.opacity = "0.7";
+    setTimeout(() => {
+      presetNameEl.style.opacity = "0";
+    }, 3000);
   };
 
   milkdrop.resize(window.innerWidth, window.innerHeight);
@@ -247,10 +278,13 @@ function startVisualization(): void {
 
   // Auto-cycle presets
   if (presetTimer) clearInterval(presetTimer);
-  presetTimer = setInterval(() => milkdrop.randomPreset(), PRESET_CYCLE_SECONDS * 1000);
+  presetTimer = setInterval(
+    () => milkdrop.randomPreset(),
+    PRESET_CYCLE_SECONDS * 1000,
+  );
 
   // Hide status
-  statusEl.classList.add('hidden');
+  statusEl.classList.add("hidden");
 
   // Populate preset browser now that presets are loaded
   presetBrowser.populate();
@@ -263,8 +297,8 @@ function startVisualization(): void {
       presetBrowser.importPlaylist(names);
       milkdrop.useFavorites = true;
       statusEl.textContent = `Imported ${names.length} presets from shared link!`;
-      statusEl.classList.remove('hidden');
-      setTimeout(() => statusEl.classList.add('hidden'), 3000);
+      statusEl.classList.remove("hidden");
+      setTimeout(() => statusEl.classList.add("hidden"), 3000);
     }
   }
 
@@ -277,14 +311,16 @@ function startVisualization(): void {
     };
   }
 
-  dbg(`Visualizer started: ${milkdrop.presetCount} presets, canvas ${milkdropCanvas.width}x${milkdropCanvas.height}`);
+  dbg(
+    `Visualizer started: ${milkdrop.presetCount} presets, canvas ${milkdropCanvas.width}x${milkdropCanvas.height}`,
+  );
 }
 
 // --- Audio source handlers ---
 
 async function handleFile(file: File): Promise<void> {
   statusEl.textContent = `Loading ${file.name}...`;
-  statusEl.classList.remove('hidden');
+  statusEl.classList.remove("hidden");
   try {
     await audio.connectFile(file);
     startVisualization();
@@ -294,14 +330,14 @@ async function handleFile(file: File): Promise<void> {
 }
 
 async function handleTabCapture(): Promise<void> {
-  statusEl.textContent = 'Choose a tab to capture audio from...';
-  statusEl.classList.remove('hidden');
+  statusEl.textContent = "Choose a tab to capture audio from...";
+  statusEl.classList.remove("hidden");
   try {
     await audio.connectTabCapture();
     startVisualization();
   } catch (err: any) {
-    if (err.name === 'NotAllowedError') {
-      statusEl.textContent = 'Tab capture cancelled';
+    if (err.name === "NotAllowedError") {
+      statusEl.textContent = "Tab capture cancelled";
     } else {
       statusEl.textContent = `Error: ${err.message}`;
     }
@@ -309,8 +345,8 @@ async function handleTabCapture(): Promise<void> {
 }
 
 async function handleMicrophone(): Promise<void> {
-  statusEl.textContent = 'Requesting microphone access...';
-  statusEl.classList.remove('hidden');
+  statusEl.textContent = "Requesting microphone access...";
+  statusEl.classList.remove("hidden");
   try {
     await audio.connectMicrophone();
     startVisualization();
@@ -321,17 +357,23 @@ async function handleMicrophone(): Promise<void> {
 
 // --- Button handlers ---
 
-btnFile.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', () => {
+btnFile.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", () => {
   const file = fileInput.files?.[0];
   if (file) handleFile(file);
 });
 
-btnTab.addEventListener('click', () => handleTabCapture());
-btnMic.addEventListener('click', () => handleMicrophone());
-btnPrev.addEventListener('click', () => { milkdrop.prevPreset(); presetBrowser.updateActiveHighlight(); });
-btnNext.addEventListener('click', () => { milkdrop.nextPreset(); presetBrowser.updateActiveHighlight(); });
-btnBrowse.addEventListener('click', () => {
+btnTab.addEventListener("click", () => handleTabCapture());
+btnMic.addEventListener("click", () => handleMicrophone());
+btnPrev.addEventListener("click", () => {
+  milkdrop.prevPreset();
+  presetBrowser.updateActiveHighlight();
+});
+btnNext.addEventListener("click", () => {
+  milkdrop.nextPreset();
+  presetBrowser.updateActiveHighlight();
+});
+btnBrowse.addEventListener("click", () => {
   // Load preset list even without audio — just can't hear anything
   if (milkdrop.presetNames.length === 0) {
     milkdrop.initPresetList();
@@ -340,57 +382,57 @@ btnBrowse.addEventListener('click', () => {
   presetBrowser.toggle();
 });
 
-const btnBeat = document.getElementById('btn-beat') as HTMLButtonElement;
-btnBeat.addEventListener('click', () => {
+const btnBeat = document.getElementById("btn-beat") as HTMLButtonElement;
+btnBeat.addEventListener("click", () => {
   beatDetector.setEnabled(!beatDetector.isEnabled());
-  btnBeat.classList.toggle('active', beatDetector.isEnabled());
+  btnBeat.classList.toggle("active", beatDetector.isEnabled());
 });
 
-const btnHelp = document.getElementById('btn-help') as HTMLButtonElement;
-btnHelp.addEventListener('click', () => helpOverlay.toggle());
+const btnHelp = document.getElementById("btn-help") as HTMLButtonElement;
+btnHelp.addEventListener("click", () => helpOverlay.toggle());
 
 // --- Drag & drop ---
 
-document.addEventListener('dragenter', (e) => {
+document.addEventListener("dragenter", (e) => {
   e.preventDefault();
-  dropZone.classList.add('active');
+  dropZone.classList.add("active");
 });
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('active');
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("active");
 });
-dropZone.addEventListener('dragover', (e) => e.preventDefault());
-dropZone.addEventListener('drop', (e) => {
+dropZone.addEventListener("dragover", (e) => e.preventDefault());
+dropZone.addEventListener("drop", (e) => {
   e.preventDefault();
-  dropZone.classList.remove('active');
+  dropZone.classList.remove("active");
   const file = e.dataTransfer?.files[0];
-  if (file && file.type.startsWith('audio/')) {
+  if (file && file.type.startsWith("audio/")) {
     handleFile(file);
   }
 });
 
 // --- Keyboard shortcuts ---
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener("keydown", (e) => {
   switch (e.key) {
-    case 'ArrowRight':
-    case 'n':
+    case "ArrowRight":
+    case "n":
       milkdrop.nextPreset();
       break;
-    case 'ArrowLeft':
-    case 'p':
+    case "ArrowLeft":
+    case "p":
       milkdrop.prevPreset();
       break;
-    case 'r':
+    case "r":
       milkdrop.randomPreset();
       break;
-    case 'b':
+    case "b":
       presetBrowser.toggle();
       break;
-    case 'f':
+    case "f":
       milkdrop.toggleFavorite(milkdrop.currentPresetName);
       break;
-    case 'h':
-    case '?':
+    case "h":
+    case "?":
       helpOverlay.toggle();
       break;
   }
@@ -398,7 +440,7 @@ document.addEventListener('keydown', (e) => {
 
 // --- Resize ---
 
-window.addEventListener('resize', () => {
+window.addEventListener("resize", () => {
   milkdrop.resize(window.innerWidth, window.innerHeight);
 });
 
@@ -407,19 +449,19 @@ window.addEventListener('resize', () => {
 // otherwise it can kill Butterchurn's WebGL context (browser limits active contexts)
 
 async function initVR(): Promise<void> {
-  dbg('[VR] initVR called');
-  dbg(`[VR] navigator.xr exists: ${'xr' in navigator}`);
+  dbg("[VR] initVR called");
+  dbg(`[VR] navigator.xr exists: ${"xr" in navigator}`);
 
-  if (!('xr' in navigator)) {
-    dbg('[VR] No WebXR support — skipping VR setup');
+  if (!("xr" in navigator)) {
+    dbg("[VR] No WebXR support — skipping VR setup");
     return;
   }
 
   try {
-    const supported = await navigator.xr!.isSessionSupported('immersive-vr');
+    const supported = await navigator.xr!.isSessionSupported("immersive-vr");
     dbg(`[VR] immersive-vr supported: ${supported}`);
     if (!supported) {
-      dbg('[VR] VR not supported — button stays hidden');
+      dbg("[VR] VR not supported — button stays hidden");
       return;
     }
   } catch (err) {
@@ -427,25 +469,25 @@ async function initVR(): Promise<void> {
     return;
   }
 
-  dbg('[VR] Showing Enter VR button');
-  btnVR.style.display = 'block';
-  btnVR.addEventListener('click', async () => {
-    dbg('[VR] Enter VR clicked');
+  dbg("[VR] Showing Enter VR button");
+  btnVR.style.display = "block";
+  btnVR.addEventListener("click", async () => {
+    dbg("[VR] Enter VR clicked");
     try {
       if (!vr) {
-        dbg('[VR] Creating VRRenderer...');
+        dbg("[VR] Creating VRRenderer...");
         vr = new VRRenderer(threeCanvas, milkdrop, audio, beatDetector);
-        dbg('[VR] VRRenderer created');
+        dbg("[VR] VRRenderer created");
       }
-      dbg('[VR] Requesting VR session...');
+      dbg("[VR] Requesting VR session...");
       await vr.enterVR();
-      dbg('[VR] VR session started, starting render loop');
+      dbg("[VR] VR session started, starting render loop");
       vr.start();
-      dbg('[VR] Render loop running');
+      dbg("[VR] Render loop running");
     } catch (err) {
       dbg(`[VR] ERROR entering VR: ${err}`);
       statusEl.textContent = `VR Error: ${err}`;
-      statusEl.classList.remove('hidden');
+      statusEl.classList.remove("hidden");
     }
   });
 }
@@ -454,12 +496,13 @@ initVR();
 
 // --- Browser compatibility checks ---
 
-const isFirefox = navigator.userAgent.includes('Firefox');
+const isFirefox = navigator.userAgent.includes("Firefox");
 if (!navigator.mediaDevices?.getDisplayMedia) {
   btnTab.disabled = true;
-  btnTab.title = 'Tab capture not supported in this browser';
+  btnTab.title = "Tab capture not supported in this browser";
 } else if (isFirefox) {
   btnTab.disabled = true;
-  btnTab.title = 'Firefox does not support tab audio capture — use Chrome or Edge';
-  btnTab.textContent = 'Tab Audio (Chrome only)';
+  btnTab.title =
+    "Firefox does not support tab audio capture — use Chrome or Edge";
+  btnTab.textContent = "Tab Audio (Chrome only)";
 }

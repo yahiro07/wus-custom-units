@@ -8,9 +8,9 @@
  * after compositing, so a later drawImage() would read black pixels.
  */
 
-import butterchurn from 'butterchurn';
-import butterchurnPresets from 'butterchurn-presets';
-import { dbg } from './debug';
+import butterchurn from "butterchurn";
+import butterchurnPresets from "butterchurn-presets";
+import { dbg } from "./debug";
 
 export interface ParamOverrides {
   zoomDelta: number;
@@ -41,30 +41,40 @@ export class MilkdropVisualizer {
 
   /** Runtime parameter overrides applied each frame */
   overrides: ParamOverrides = {
-    zoomDelta: 0, rotDelta: 0,
-    waveROffset: 0, waveGOffset: 0, waveBOffset: 0,
-    warpOffset: 0, decayOffset: 0,
-    gammaOffset: 0, waveScaleOffset: 0,
+    zoomDelta: 0,
+    rotDelta: 0,
+    waveROffset: 0,
+    waveGOffset: 0,
+    waveBOffset: 0,
+    warpOffset: 0,
+    decayOffset: 0,
+    gammaOffset: 0,
+    waveScaleOffset: 0,
   };
 
   onPresetChange?: (name: string) => void;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.snapshotCanvas = document.createElement('canvas');
-    this.snapshotCtx = this.snapshotCanvas.getContext('2d')!;
+    this.snapshotCanvas = document.createElement("canvas");
+    this.snapshotCtx = this.snapshotCanvas.getContext("2d")!;
     this.loadFavorites();
   }
 
   private loadFavorites(): void {
     try {
-      const saved = localStorage.getItem('milkdrop-favorites');
+      const saved = localStorage.getItem("milkdrop-favorites");
       if (saved) this.favorites = new Set(JSON.parse(saved));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
 
   saveFavorites(): void {
-    localStorage.setItem('milkdrop-favorites', JSON.stringify([...this.favorites]));
+    localStorage.setItem(
+      "milkdrop-favorites",
+      JSON.stringify([...this.favorites]),
+    );
   }
 
   toggleFavorite(name: string): boolean {
@@ -82,11 +92,11 @@ export class MilkdropVisualizer {
   }
 
   getFavoriteNames(): string[] {
-    return this.presetNames.filter(n => this.favorites.has(n));
+    return this.presetNames.filter((n) => this.favorites.has(n));
   }
 
   get currentPresetName(): string {
-    return this.presetNames[this.currentIndex] ?? '(none)';
+    return this.presetNames[this.currentIndex] ?? "(none)";
   }
 
   get presetCount(): number {
@@ -129,7 +139,9 @@ export class MilkdropVisualizer {
     this.currentIndex = Math.floor(Math.random() * this.presetNames.length);
     this.loadCurrentPreset(0);
 
-    dbg(`[Milkdrop] init: ${width}x${height}, ${this.presetNames.length} presets`);
+    dbg(
+      `[Milkdrop] init: ${width}x${height}, ${this.presetNames.length} presets`,
+    );
   }
 
   private loadCurrentPreset(blendTime: number): void {
@@ -143,7 +155,7 @@ export class MilkdropVisualizer {
   /** Get the effective preset list (all or favorites only) */
   private getActiveList(): string[] {
     if (this.useFavorites && this.favorites.size > 0) {
-      return this.presetNames.filter(n => this.favorites.has(n));
+      return this.presetNames.filter((n) => this.favorites.has(n));
     }
     return this.presetNames;
   }
@@ -200,25 +212,35 @@ export class MilkdropVisualizer {
       const f = runner.mdVSFrame;
 
       // Zoom & rotation (direct from thumbstick, per-frame)
-      if (o.zoomDelta !== 0 && 'zoom' in f) f.zoom += o.zoomDelta * 0.02;
-      if (o.rotDelta !== 0 && 'rot' in f) f.rot += o.rotDelta * 0.05;
+      if (o.zoomDelta !== 0 && "zoom" in f) f.zoom += o.zoomDelta * 0.02;
+      if (o.rotDelta !== 0 && "rot" in f) f.rot += o.rotDelta * 0.05;
 
       // Wave color (accumulated offsets, clamped 0-1)
-      if (o.waveROffset !== 0 && 'wave_r' in f) f.wave_r = Math.max(0, Math.min(1, f.wave_r + o.waveROffset));
-      if (o.waveGOffset !== 0 && 'wave_g' in f) f.wave_g = Math.max(0, Math.min(1, f.wave_g + o.waveGOffset));
-      if (o.waveBOffset !== 0 && 'wave_b' in f) f.wave_b = Math.max(0, Math.min(1, f.wave_b + o.waveBOffset));
+      if (o.waveROffset !== 0 && "wave_r" in f)
+        f.wave_r = Math.max(0, Math.min(1, f.wave_r + o.waveROffset));
+      if (o.waveGOffset !== 0 && "wave_g" in f)
+        f.wave_g = Math.max(0, Math.min(1, f.wave_g + o.waveGOffset));
+      if (o.waveBOffset !== 0 && "wave_b" in f)
+        f.wave_b = Math.max(0, Math.min(1, f.wave_b + o.waveBOffset));
 
       // Warp intensity (accumulated offset)
-      if (o.warpOffset !== 0 && 'warp' in f) f.warp = Math.max(0, f.warp + o.warpOffset);
+      if (o.warpOffset !== 0 && "warp" in f)
+        f.warp = Math.max(0, f.warp + o.warpOffset);
 
       // Decay — trail persistence (0.8 = fast fade, 1.0 = infinite trails)
-      if (o.decayOffset !== 0 && 'decay' in f) f.decay = Math.max(0.8, Math.min(1.0, f.decay + o.decayOffset));
+      if (o.decayOffset !== 0 && "decay" in f)
+        f.decay = Math.max(0.8, Math.min(1.0, f.decay + o.decayOffset));
 
       // Gamma/brightness
-      if (o.gammaOffset !== 0 && 'gammaadj' in f) f.gammaadj = Math.max(0.5, Math.min(4.0, f.gammaadj + o.gammaOffset));
+      if (o.gammaOffset !== 0 && "gammaadj" in f)
+        f.gammaadj = Math.max(0.5, Math.min(4.0, f.gammaadj + o.gammaOffset));
 
       // Wave scale
-      if (o.waveScaleOffset !== 0 && 'wave_scale' in f) f.wave_scale = Math.max(0.1, Math.min(5.0, f.wave_scale + o.waveScaleOffset));
+      if (o.waveScaleOffset !== 0 && "wave_scale" in f)
+        f.wave_scale = Math.max(
+          0.1,
+          Math.min(5.0, f.wave_scale + o.waveScaleOffset),
+        );
     } catch {
       // Internals changed — silently ignore
     }
@@ -226,10 +248,15 @@ export class MilkdropVisualizer {
 
   resetOverrides(): void {
     this.overrides = {
-      zoomDelta: 0, rotDelta: 0,
-      waveROffset: 0, waveGOffset: 0, waveBOffset: 0,
-      warpOffset: 0, decayOffset: 0,
-      gammaOffset: 0, waveScaleOffset: 0,
+      zoomDelta: 0,
+      rotDelta: 0,
+      waveROffset: 0,
+      waveGOffset: 0,
+      waveBOffset: 0,
+      warpOffset: 0,
+      decayOffset: 0,
+      gammaOffset: 0,
+      waveScaleOffset: 0,
     };
   }
 

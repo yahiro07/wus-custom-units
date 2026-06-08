@@ -21,8 +21,12 @@ export class TouchControls {
   onDoubleTap?: () => void;
 
   attach(element: HTMLElement): void {
-    element.addEventListener('touchstart', (e) => this.handleStart(e), { passive: true });
-    element.addEventListener('touchend', (e) => this.handleEnd(e), { passive: true });
+    element.addEventListener("touchstart", (e) => this.handleStart(e), {
+      passive: true,
+    });
+    element.addEventListener("touchend", (e) => this.handleEnd(e), {
+      passive: true,
+    });
   }
 
   private handleStart(e: TouchEvent): void {

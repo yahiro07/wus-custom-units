@@ -8,62 +8,68 @@ export class HelpOverlay {
   private visible = false;
 
   constructor() {
-    this.overlay = document.createElement('div');
-    this.overlay.id = 'help-overlay';
+    this.overlay = document.createElement("div");
+    this.overlay.id = "help-overlay";
 
-    const backdrop = document.createElement('div');
-    backdrop.className = 'help-backdrop';
-    backdrop.addEventListener('click', () => this.hide());
+    const backdrop = document.createElement("div");
+    backdrop.className = "help-backdrop";
+    backdrop.addEventListener("click", () => this.hide());
 
-    const content = document.createElement('div');
-    content.className = 'help-content';
+    const content = document.createElement("div");
+    content.className = "help-content";
 
-    const title = document.createElement('h2');
-    title.textContent = 'Controls';
+    const title = document.createElement("h2");
+    title.textContent = "Controls";
 
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'help-close';
-    closeBtn.textContent = '\u2715';
-    closeBtn.addEventListener('click', () => this.hide());
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "help-close";
+    closeBtn.textContent = "\u2715";
+    closeBtn.addEventListener("click", () => this.hide());
 
-    const sections = document.createElement('div');
-    sections.className = 'help-sections';
+    const sections = document.createElement("div");
+    sections.className = "help-sections";
 
     // Keyboard section
-    const kbd = this.createSection('Keyboard', [
-      ['N / \u2192', 'Next preset'],
-      ['P / \u2190', 'Previous preset'],
-      ['R', 'Random preset'],
-      ['B', 'Toggle preset browser'],
-      ['F', 'Favorite current preset'],
-      ['H / ?', 'Toggle this help screen'],
+    const kbd = this.createSection("Keyboard", [
+      ["N / \u2192", "Next preset"],
+      ["P / \u2190", "Previous preset"],
+      ["R", "Random preset"],
+      ["B", "Toggle preset browser"],
+      ["F", "Favorite current preset"],
+      ["H / ?", "Toggle this help screen"],
     ]);
 
     // VR section
-    const vr = this.createSection('VR Controllers (Quest)', [
-      ['Left stick flick L/R', 'Prev / next preset'],
-      ['Hold A + left stick', 'Zoom (up/down) \u00B7 Rotation (left/right)'],
-      ['Hold B + left stick', 'Warp (up/down) \u00B7 Trail decay (left/right)'],
-      ['Hold X + left stick', 'Green color (up/down) \u00B7 Red\u2194Blue (left/right)'],
-      ['Hold Y + left stick', 'Brightness (up/down) \u00B7 Wave scale (left/right)'],
-      ['Left trigger', 'Random preset'],
-      ['Right trigger', 'Reset all overrides'],
-      ['Left stick press', 'Toggle passthrough mode'],
+    const vr = this.createSection("VR Controllers (Quest)", [
+      ["Left stick flick L/R", "Prev / next preset"],
+      ["Hold A + left stick", "Zoom (up/down) \u00B7 Rotation (left/right)"],
+      ["Hold B + left stick", "Warp (up/down) \u00B7 Trail decay (left/right)"],
+      [
+        "Hold X + left stick",
+        "Green color (up/down) \u00B7 Red\u2194Blue (left/right)",
+      ],
+      [
+        "Hold Y + left stick",
+        "Brightness (up/down) \u00B7 Wave scale (left/right)",
+      ],
+      ["Left trigger", "Random preset"],
+      ["Right trigger", "Reset all overrides"],
+      ["Left stick press", "Toggle passthrough mode"],
     ]);
 
     // Touch section
-    const touchSection = this.createSection('Mobile Touch', [
-      ['Swipe left / right', 'Next / previous preset'],
-      ['Swipe up', 'Open preset browser'],
-      ['Swipe down', 'Close preset browser'],
-      ['Tap', 'Show / hide controls'],
-      ['Double-tap', 'Random preset'],
+    const touchSection = this.createSection("Mobile Touch", [
+      ["Swipe left / right", "Next / previous preset"],
+      ["Swipe up", "Open preset browser"],
+      ["Swipe down", "Close preset browser"],
+      ["Tap", "Show / hide controls"],
+      ["Double-tap", "Random preset"],
     ]);
 
     // MIDI section
-    const midiSection = this.createSection('MIDI Controller', [
-      ['Any knob/fader', 'Click MIDI \u2192 MIDI Learn to assign'],
-      ['Any key/pad', 'Random preset'],
+    const midiSection = this.createSection("MIDI Controller", [
+      ["Any knob/fader", "Click MIDI \u2192 MIDI Learn to assign"],
+      ["Any key/pad", "Random preset"],
     ]);
 
     sections.appendChild(kbd);
@@ -79,7 +85,7 @@ export class HelpOverlay {
     document.body.appendChild(this.overlay);
 
     // Style
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       #help-overlay {
         display: none; position: fixed; inset: 0; z-index: 60;
@@ -125,24 +131,27 @@ export class HelpOverlay {
     document.head.appendChild(style);
   }
 
-  private createSection(title: string, rows: [string, string][]): HTMLDivElement {
-    const section = document.createElement('div');
-    section.className = 'help-section';
+  private createSection(
+    title: string,
+    rows: [string, string][],
+  ): HTMLDivElement {
+    const section = document.createElement("div");
+    section.className = "help-section";
 
-    const h3 = document.createElement('h3');
+    const h3 = document.createElement("h3");
     h3.textContent = title;
     section.appendChild(h3);
 
     for (const [key, desc] of rows) {
-      const row = document.createElement('div');
-      row.className = 'help-row';
+      const row = document.createElement("div");
+      row.className = "help-row";
 
-      const keyEl = document.createElement('span');
-      keyEl.className = 'help-key';
+      const keyEl = document.createElement("span");
+      keyEl.className = "help-key";
       keyEl.textContent = key;
 
-      const descEl = document.createElement('span');
-      descEl.className = 'help-desc';
+      const descEl = document.createElement("span");
+      descEl.className = "help-desc";
       descEl.textContent = desc;
 
       row.appendChild(keyEl);
@@ -155,12 +164,12 @@ export class HelpOverlay {
 
   show(): void {
     this.visible = true;
-    this.overlay.classList.add('open');
+    this.overlay.classList.add("open");
   }
 
   hide(): void {
     this.visible = false;
-    this.overlay.classList.remove('open');
+    this.overlay.classList.remove("open");
   }
 
   toggle(): void {

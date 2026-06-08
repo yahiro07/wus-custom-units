@@ -18,7 +18,9 @@ export class BeatDetector {
 
   attach(analyser: AnalyserNode): void {
     this.analyser = analyser;
-    this.freqData = new Uint8Array(analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>;
+    this.freqData = new Uint8Array(
+      analyser.frequencyBinCount,
+    ) as Uint8Array<ArrayBuffer>;
     this.energyHistory = [];
     this.framesSinceLastBeat = this.cooldownFrames; // allow immediate first beat
   }
@@ -64,10 +66,15 @@ export class BeatDetector {
     if (this.energyHistory.length < 10) return;
 
     // Calculate average energy
-    const avg = this.energyHistory.reduce((a, b) => a + b, 0) / this.energyHistory.length;
+    const avg =
+      this.energyHistory.reduce((a, b) => a + b, 0) / this.energyHistory.length;
 
     // Beat detected when current energy significantly exceeds average
-    if (avg > 0.01 && energy / avg > this.threshold && this.framesSinceLastBeat >= this.cooldownFrames) {
+    if (
+      avg > 0.01 &&
+      energy / avg > this.threshold &&
+      this.framesSinceLastBeat >= this.cooldownFrames
+    ) {
       this.framesSinceLastBeat = 0;
       this.onBeat?.();
     }
