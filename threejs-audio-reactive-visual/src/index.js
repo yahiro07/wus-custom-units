@@ -35,6 +35,11 @@ import { InstancedUniformsMesh } from "three-instanced-uniforms-mesh";
 import { Pane } from "tweakpane";
 import { gsap } from "gsap";
 
+import backgroundFragmentShader from "./shaders/background.fragment.glsl?raw";
+import backgroundVertexShader from "./shaders/background.vertex.glsl?raw";
+import particleFragmentShader from "./shaders/particle.fragment.glsl?raw";
+import particleVertexShader from "./shaders/particle.vertex.glsl?raw";
+
 class App {
   constructor(container) {
     this.container = document.querySelector(container);
@@ -206,7 +211,7 @@ class App {
   }
 
   _createControls() {
-    if (process.env.NODE_ENV === "production") return;
+    if (import.meta.env.PROD) return;
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
@@ -230,8 +235,8 @@ class App {
 
   _createBigSphere() {
     const material = new ShaderMaterial({
-      fragmentShader: require("./shaders/background.fragment.glsl"),
-      vertexShader: require("./shaders/background.vertex.glsl"),
+      fragmentShader: backgroundFragmentShader,
+      vertexShader: backgroundVertexShader,
       side: BackSide,
       wireframe: true,
       transparent: true,
@@ -256,8 +261,8 @@ class App {
     const geom = new SphereGeometry(0.01, 16, 16);
 
     const material = new ShaderMaterial({
-      vertexShader: require("./shaders/particle.vertex.glsl"),
-      fragmentShader: require("./shaders/particle.fragment.glsl"),
+      vertexShader: particleVertexShader,
+      fragmentShader: particleFragmentShader,
       transparent: true,
       blending: AdditiveBlending,
       uniforms: {
