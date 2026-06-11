@@ -6,14 +6,12 @@ function setupWebAudioUnit() {
       outputs: ["audio"],
       inputs: ["note"],
     },
-    primaryInputPortHandlers: {
-      noteInput: {
-        noteOn(noteNumber) {
-          ctrl.note_on(noteNumber);
-        },
-        noteOff(noteNumber) {
-          ctrl.note_off(noteNumber);
-        },
+    noteInput: {
+      noteOn(noteNumber) {
+        ctrl.note_on(noteNumber);
+      },
+      noteOff(noteNumber) {
+        ctrl.note_off(noteNumber);
       },
     },
   });

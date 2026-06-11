@@ -278,8 +278,7 @@ synth.prototype = {
 
       //Connect master gain node to destination (speakers)
       this.masterGainNode.connect(
-        window.unitInterface?.primaryOutputPort.audioOutput.node ??
-          this.context.destination,
+        window.unitInterface?.audioOutputNode ?? this.context.destination,
       );
 
       //Connect lfo to filter
