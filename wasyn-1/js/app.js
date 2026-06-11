@@ -1,4 +1,4 @@
-window.checkUnitInterfaceCompatibility?.("wus-v02");
+window.checkUnitInterfaceCompatibility?.("wus-v01");
 
 var app = {
   //Web audio context (Passed in to instruments)

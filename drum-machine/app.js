@@ -1,5 +1,7 @@
 // glue: ui, pattern state, persistence, plus wiring the scheduler to the voices.
 
+window.checkUnitInterfaceCompatibility?.("wus-v01");
+
 (function () {
   const VOICES = [
     { key: "kick", label: "kick" },
@@ -47,14 +49,12 @@
 
   function ensureAudio() {
     if (audioCtx) return;
-    window.checkUnitInterfaceCompatibility?.("wus-v02");
     audioCtx = window.unitInterface?.audioContext ?? new AudioContext();
 
     masterGain = audioCtx.createGain();
     masterGain.gain.value = parseFloat(masterInput.value);
     masterGain.connect(
-      window.unitInterface?.primaryOutputPort.audioOutput.node ??
-        audioCtx.destination,
+      window.unitInterface?.audioOutputNode ?? audioCtx.destination,
     );
 
     scheduler = createScheduler(audioCtx, {

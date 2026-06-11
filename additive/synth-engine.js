@@ -1,3 +1,5 @@
+window.checkUnitInterfaceCompatibility?.("wus-v01");
+
 class AdditiveEngine {
   constructor() {
     this.ctx = null;
@@ -19,7 +21,6 @@ class AdditiveEngine {
 
   async init() {
     if (this.isInitialized) return;
-    window.checkUnitInterfaceCompatibility?.("wus-v02");
     this.ctx =
       window.unitInterface?.audioContext ??
       new (window.AudioContext ?? window.webkitAudioContext)();
@@ -32,8 +33,7 @@ class AdditiveEngine {
     this.compressor.attack.value = 0.003;
     this.compressor.release.value = 0.15;
     this.compressor.connect(
-      window.unitInterface?.primaryOutputPort.audioOutput.node ??
-        this.ctx.destination,
+      window.unitInterface?.audioOutputNode ?? this.ctx.destination,
     );
 
     this.masterGain = this.ctx.createGain();

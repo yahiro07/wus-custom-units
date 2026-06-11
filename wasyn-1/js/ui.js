@@ -87,15 +87,13 @@ var ui = {
         outputs: ["audio"],
         inputs: ["note"],
       },
-      primaryInputPortHandlers: {
-        noteInput: {
-          noteOn(noteNumber, velocity) {
-            app.checkContext();
-            app.synth.noteOn(noteNumber, velocity * 127);
-          },
-          noteOff(noteNumber) {
-            app.synth.noteOff(noteNumber);
-          },
+      noteInput: {
+        noteOn(noteNumber, velocity) {
+          app.checkContext();
+          app.synth.noteOn(noteNumber, velocity * 127);
+        },
+        noteOff(noteNumber) {
+          app.synth.noteOff(noteNumber);
         },
       },
     });
