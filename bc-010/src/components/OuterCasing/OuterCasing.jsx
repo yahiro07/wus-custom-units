@@ -10,6 +10,8 @@ import PropTypes from "prop-types";
 import { createCrossRealmAudioBridgingNode } from "../../cross-realm-audio-bridging-node";
 import * as Tone from "tone";
 
+window.checkUnitInterfaceCompatibility?.("wus-v01");
+
 function midiToNoteName(midiNumber) {
   const noteNames = [
     "C",
@@ -48,10 +50,10 @@ type Props = {
 };
 
 const toneAudioContext = Tone.getContext().rawContext;
-window.checkUnitInterfaceCompatibility?.("wus-v02");
+
 const wrappedDestinationNode = window.unitInterface
   ? createCrossRealmAudioBridgingNode(
-      window.unitInterface.primaryOutputPort.audioOutput.node,
+      window.unitInterface.audioOutputNode,
       toneAudioContext,
     )
   : undefined;
@@ -81,28 +83,23 @@ class OuterCasing extends Component<Props> {
   componentDidMount() {
     const self = this;
 
-    const unitInterface = window.unitInterface;
-    if (unitInterface) {
-      window.unitInterface.completeSetup({
-        unitAspects: {
-          unitType: "instrument",
-          categoryHint: "synthesizer",
-          outputs: ["audio"],
-          inputs: ["note"],
+    window.unitInterface?.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
+        categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note"],
+      },
+      noteInput: {
+        noteOn(noteNumber) {
+          const noteName = midiToNoteName(noteNumber);
+          self.synth.triggerAttack(noteName);
         },
-        primaryInputPortHandlers: {
-          noteInput: {
-            noteOn(noteNumber) {
-              const noteName = midiToNoteName(noteNumber);
-              self.synth.triggerAttack(noteName);
-            },
-            noteOff() {
-              self.synth.triggerRelease();
-            },
-          },
+        noteOff() {
+          self.synth.triggerRelease();
         },
-      });
-    }
+      },
+    });
   }
 
   render() {

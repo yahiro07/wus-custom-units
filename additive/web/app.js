@@ -440,7 +440,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { passive: false },
   );
 
-  window.checkUnitInterfaceCompatibility?.("wus-v02");
   if (window.unitInterface) {
     window.unitInterface.completeSetup({
       unitAspects: {
@@ -449,15 +448,13 @@ document.addEventListener("DOMContentLoaded", () => {
         outputs: ["audio"],
         inputs: ["note"],
       },
-      primaryInputPortHandlers: {
-        noteInput: {
-          noteOn(noteNumber) {
-            initAudio();
-            handleKeyDown(noteNumber);
-          },
-          noteOff(noteNumber) {
-            handleKeyUp(noteNumber);
-          },
+      noteInput: {
+        noteOn(noteNumber) {
+          initAudio();
+          handleKeyDown(noteNumber);
+        },
+        noteOff(noteNumber) {
+          handleKeyUp(noteNumber);
         },
       },
     });

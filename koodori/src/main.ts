@@ -32,9 +32,9 @@ import {
   defaultNoteVolume,
   defaultPattern,
 } from './utils';
-import { getUnitInterface } from 'wus-unit-types';
+import { queryUnitInterface } from 'wus-unit-types';
 
-const unitInterface = getUnitInterface('wus-v02');
+const unitInterface = queryUnitInterface('wus-v01');
 
 // 初期化して使う
 let audioCtx: AudioContext;
@@ -293,7 +293,7 @@ const initializeRouting = () => {
   // 最終出力
   masterFilterNode.connect(masterGainNode);
   masterGainNode.connect(
-    unitInterface?.primaryOutputPort.audioOutput.node ?? audioCtx.destination,
+    unitInterface?.audioOutputNode ?? audioCtx.destination,
   );
 };
 
