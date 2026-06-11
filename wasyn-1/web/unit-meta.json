@@ -6,7 +6,7 @@
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
   "protocol": "wus-v01",
-  "unitTypesVersion": "0.2.2",
+  "unitTypesVersion": "0.2.5",
   "originalRepositoryUrl": "https://github.com/errozero/poly-synth",
   "originalAuthor": "Mark H",
   "forkedRepositoryUrl": "https://github.com/yahiro07/wus-custom-units",
