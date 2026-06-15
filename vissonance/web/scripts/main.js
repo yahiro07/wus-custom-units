@@ -11,10 +11,8 @@ if (!Detector.webgl) {
   controller.init(audioAnalyser, view);
 
   if (window.unitInterface) {
-    audioAnalyser.setSourceNode(unitInterface.primaryInputPort.audioInput.node);
-    unitInterface.primaryInputPort.audioInput.node.connect(
-      unitInterface.primaryOutputPort.audioOutput.node,
-    );
+    audioAnalyser.setSourceNode(unitInterface.audioInputNode);
+    unitInterface.audioInputNode.connect(unitInterface.audioOutputNode);
     window.unitInterface?.completeSetup({
       unitAspects: {
         unitType: "effect",

@@ -1,3 +1,5 @@
+window.checkUnitInterfaceCompatibility?.("wafer-v01");
+
 function AudioAnalyser() {
   var audioanalyser = {
     audioCtx: null,
@@ -6,7 +8,6 @@ function AudioAnalyser() {
     gainNode: null,
     hasNewSong: false,
     init: function () {
-      window.checkUnitInterfaceCompatibility?.("wus-v02");
       audioanalyser.audioCtx =
         window.unitInterface?.audioContext ??
         new (window.AudioContext || window.webkitAudioContext)();
