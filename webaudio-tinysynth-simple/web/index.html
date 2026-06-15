@@ -32,19 +32,6 @@
 
     const uintInterface = window.unitInterface;
     if (uintInterface) {
-      const inputPorts = unitInterface.createMultiChannelInputPorts(16);
-      inputPorts.forEach((port) => {
-        port.setHandlers({
-          noteInput: {
-            noteOn(ch, noteNumber, time, velocity) {
-              synth.send([0x90 | ch, noteNumber, velocity * 127], time);
-            },
-            noteOff(ch, noteNumber) {
-              synth.send([0x80 | ch, noteNumber, 0], time);
-            },
-          },
-        });
-      });
       unitInterface.completeSetup({
         unitAspects: {
           unitType: "instrument",
@@ -52,17 +39,14 @@
           outputs: ["audio"],
           inputs: ["note"],
         },
-        primaryInputPortHandlers: {
-          noteInput: {
-            noteOn(noteNumber, time, velocity) {
-              synth.send([0x90, noteNumber, (velocity ?? 1) * 127], time);
-            },
-            noteOff(noteNumber, time) {
-              synth.send([0x80, noteNumber, 0], time);
-            },
+        noteInput: {
+          noteOn(noteNumber, time, velocity) {
+            synth.send([0x90, noteNumber, (velocity ?? 1) * 127], time);
+          },
+          noteOff(noteNumber, time) {
+            synth.send([0x80, noteNumber, 0], time);
           },
         },
-        multiChannelInputPorts: inputPorts,
       });
     }
   </script>

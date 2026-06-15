@@ -5,7 +5,7 @@
   "preferredSize": "800,500",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "note",
-  "protocol": "wus-v01",
+  "protocol": "wafer-v01",
   "unitTypesVersion": "0.1.5",
   "integrationFormat": "iframe",
   "originalRepositoryUrl": "https://github.com/BrendanJamesLynskey/Synth_Additive.git",

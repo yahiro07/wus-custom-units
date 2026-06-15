@@ -1,6 +1,6 @@
 // glue: ui, pattern state, persistence, plus wiring the scheduler to the voices.
 
-window.checkUnitInterfaceCompatibility?.("wus-v01");
+window.checkUnitInterfaceCompatibility?.("wafer-v01");
 
 (function () {
   const VOICES = [

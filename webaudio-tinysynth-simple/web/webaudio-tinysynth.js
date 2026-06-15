@@ -1613,12 +1613,12 @@
         );
         if (this.debug) console.log("internalcontext:" + this.internalcontext);
         if (this.internalcontext) {
-          window.checkUnitInterfaceCompatibility?.("wus-v02");
+          window.checkUnitInterfaceCompatibility?.("wafer-v01");
           const { unitInterface } = window;
           if (unitInterface) {
             this.setAudioContext(
               unitInterface.audioContext,
-              unitInterface.primaryOutputPort.audioOutput.node,
+              unitInterface.audioOutputNode,
             );
           } else {
             this.setAudioContext(new AudioContext());

@@ -328,7 +328,7 @@ CTL_Filter.prototype.getnode = function () {
 ///////////// SYNTH MAIN /////////////////////
 var WebSynth = function () {
   var self = this;
-  window.checkUnitInterfaceCompatibility?.("wus-v01");
+  window.checkUnitInterfaceCompatibility?.("wafer-v01");
   this.context = window.unitInterface?.audioContext ?? new AudioContext();
   this.vco1 = new VCO(this.context);
   this.vco2 = new VCO(this.context);
