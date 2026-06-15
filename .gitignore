@@ -2,3 +2,4 @@ node_modules/
 .local/
 dist/
 .vscode/settings.json
+*.code-workspace
