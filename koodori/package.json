@@ -28,7 +28,7 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0",
-    "wafer-host": "^0.0.2"
+    "wafer-host": "^0.0.3"
   },
   "private": true
 }
