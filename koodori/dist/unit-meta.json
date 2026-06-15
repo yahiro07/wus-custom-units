@@ -4,7 +4,7 @@
   "category": "drumMachine",
   "preferredSize": "727,562",
   "protocol": "wafer-v01",
-  "unitTypesVersion": "0.2.5",
+  "unitTypesVersion": "0.0.1",
   "outputSignalTypes": "audio",
   "inputSignalTypes": "",
   "originalRepositoryUrl": "https://github.com/naberyo34/koodori.git",
