@@ -14,27 +14,6 @@ $(function () {
 
   gui = new ThreePiece("draw", 1100, 600, true);
 
-  var getFlatMode = function () {
-    return window.flatMode === true;
-  };
-  var getCameraConfig = function (flatMode) {
-    if (flatMode) {
-      return {
-        obj: "orthographiccamera",
-        y: 30,
-        z: 0,
-        rx: -Math.PI / 2,
-        size: 1.2,
-      };
-    }
-    return { obj: "perspectivecamera", y: 2.6, z: 2.6, rx: -0.75, fov: 47 };
-  };
-  var applyViewMode = function (flatMode) {
-    gui.setCamera(getCameraConfig(flatMode));
-    document.body.style.background = flatMode ? "#c2c2cd" : "#000";
-    gui.setDirty();
-  };
-
   ///////// Define Macros
   // screw
   gui.define("screw", {
@@ -57,7 +36,7 @@ $(function () {
     z: 2,
     rx: 0,
     data: [
-      { obj: "box", w: 0.88, h: 0.2, d: 5.2, y: 1.2, z: 3.1, col: 0xffffee },
+      { obj: "box", w: 0.88, h: 0.2, d: 6.5, y: 1.2, z: 2.5, col: 0xffffee },
     ],
   });
   // black key
@@ -74,10 +53,10 @@ $(function () {
           [0, 0],
           [0.4, 0.95],
           [0.5, 1],
-          [1.8 - 0.2, 0.9],
-          [2.6 - 0.2, 0.8],
-          [3.5 - 0.2, 0.7],
-          [3.5 - 0.2, 0],
+          [1.8, 0.9],
+          [2.6, 0.8],
+          [3.5, 0.7],
+          [3.5, 0],
         ],
         y: 0.8,
         z: 2.8,
@@ -256,12 +235,22 @@ $(function () {
       { obj: "texture", name: "logo", file: "images/logoplate.jpg" },
 
       // camera
-      getCameraConfig(getFlatMode()),
+      { obj: "perspectivecamera", y: 2, fov: 50 },
 
       // light
       { obj: "directionalLight", intensity: 0, name: "dlight" },
-      { obj: "hemisphereLight", intensity: 0.3 },
-      // {obj:'spotLight', col:0xFFFFF8, intensity:1.5, x:10, y:10, z:-5, tx:0, ty:0, tz:0},
+      { obj: "hemisphereLight", intensity: 0.1 },
+      {
+        obj: "spotLight",
+        col: 0xfffff8,
+        intensity: 1.5,
+        x: 10,
+        y: 10,
+        z: -5,
+        tx: 0,
+        ty: 0,
+        tz: 0,
+      },
 
       // bottom board
       {
@@ -584,7 +573,7 @@ $(function () {
     (function (name) {
       gui.setMouseEnterCallback(name, function (o) {
         if (ctrl.mouseDown) return;
-        o.parent.children[0].intensity = 2;
+        o.parent.children[0].intensity = 5;
         ctrl.focus = name;
         gui.setDirty();
       });
@@ -623,31 +612,26 @@ $(function () {
 
   gui.enableMouseEvent(true);
 
-  gui.addHook(function () {
-    var targetRotation = getFlatMode() ? 0 : 0.9;
-    var targetLight = 0.8;
-    var panel = gui.obj("panel");
-    var dlight = gui.obj("dlight");
+  // panel raise animation
+  if (true) {
+    gui.addHook(function (msec) {
+      if (gui.obj("panel").rotation.x < 0.9) {
+        gui.obj("panel").rotation.x += 0.01;
+        gui.setDirty();
+      }
+      if (gui.obj("dlight").intensity < 0.8) {
+        gui.obj("dlight").intensity += 0.01;
+        gui.setDirty();
+      }
+    });
+  } else {
+    gui.obj("panel").rotation.x = 1.0;
+    gui.obj("dlight").intensity = 0.8;
+  }
 
-    if (Math.abs(panel.rotation.x - targetRotation) > 0.01) {
-      panel.rotation.x += panel.rotation.x < targetRotation ? 0.01 : -0.01;
-      gui.setDirty();
-    } else if (panel.rotation.x !== targetRotation) {
-      panel.rotation.x = targetRotation;
-      gui.setDirty();
-    }
-
-    if (Math.abs(dlight.intensity - targetLight) > 0.01) {
-      dlight.intensity += dlight.intensity < targetLight ? 0.01 : -0.01;
-      gui.setDirty();
-    } else if (dlight.intensity !== targetLight) {
-      dlight.intensity = targetLight;
-      gui.setDirty();
-    }
-  });
-
-  applyViewMode(getFlatMode());
-  window.applySynthViewMode = applyViewMode;
+  gui.obj("camera").position.y += 0.6;
+  gui.obj("camera").position.z -= 0.4;
+  gui.obj("camera").rotation.x -= 0.15;
 
   ctrl.setDefaultValues();
 

@@ -30,6 +30,3 @@ Programming and GUI Design: aike
 three.js by mrdoob https://github.com/mrdoob/three.js/  
 ThreePiece.js by aike https://github.com/aike/ThreePiece.js  
 Contact: twitter @aike1000
-
-## MODIFICATION
-In this fork, in addition to supporting the unit-system, we've added a Flat View mode that displays GUI in the classic 2D way. You can switch between 3D or 2D view with top-left buttons. yahiro did this work.
