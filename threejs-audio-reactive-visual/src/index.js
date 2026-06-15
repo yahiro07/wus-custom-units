@@ -20,6 +20,7 @@ import {
   Audio,
   AudioLoader,
   AudioAnalyser,
+  AudioContext,
 } from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -39,6 +40,8 @@ import backgroundFragmentShader from "./shaders/background.fragment.glsl?raw";
 import backgroundVertexShader from "./shaders/background.vertex.glsl?raw";
 import particleFragmentShader from "./shaders/particle.fragment.glsl?raw";
 import particleVertexShader from "./shaders/particle.vertex.glsl?raw";
+
+const unitInterface = window.queryUnitInterface?.("wafer-v01");
 
 class App {
   constructor(container) {
@@ -378,6 +381,22 @@ class App {
   }
 
   _loadMusic() {
+    if (unitInterface) {
+      AudioContext.setContext(unitInterface.audioContext);
+      const listener = new AudioListener();
+      this.camera.add(listener);
+
+      const audio = new Audio(listener);
+      audio.setNodeSource(unitInterface.audioInputNode);
+      audio.gain.disconnect();
+
+      unitInterface.audioInputNode.connect(unitInterface.audioOutputNode);
+      const unitAudioSourceNode = unitInterface.audioInputNode;
+
+      this.analyser = new AudioAnalyser(audio, 128);
+      return Promise.resolve();
+    }
+
     return new Promise((resolve) => {
       const listener = new AudioListener();
       this.camera.add(listener);
@@ -464,3 +483,12 @@ class App {
 
 const app = new App("#app");
 app.init();
+
+unitInterface?.completeSetup({
+  unitAspects: {
+    unitType: "effect",
+    categoryHint: "visualizer",
+    outputs: ["audio"],
+    inputs: ["audio"],
+  },
+});
