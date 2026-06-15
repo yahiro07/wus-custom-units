@@ -84,6 +84,11 @@ class App {
       this._render();
     });
 
+    if (unitInterface) {
+      this._connectToUnitAudioSource();
+      return;
+    }
+
     const audioBtn = document.querySelector("#audio-btn");
     audioBtn.addEventListener(
       "click",
@@ -380,7 +385,7 @@ class App {
     });
   }
 
-  _loadMusic() {
+  _connectToUnitAudioSource() {
     if (unitInterface) {
       AudioContext.setContext(unitInterface.audioContext);
       const listener = new AudioListener();
@@ -389,14 +394,22 @@ class App {
       const audio = new Audio(listener);
       audio.setNodeSource(unitInterface.audioInputNode);
       audio.gain.disconnect();
+      audio.setVolume(0.1);
 
       unitInterface.audioInputNode.connect(unitInterface.audioOutputNode);
       const unitAudioSourceNode = unitInterface.audioInputNode;
 
       this.analyser = new AudioAnalyser(audio, 128);
-      return Promise.resolve();
-    }
 
+      Object.assign(this.config, {
+        particlesSpeed: 0.55,
+        cameraSpeed: 1,
+        duration: 1.3,
+      });
+    }
+  }
+
+  _loadMusic() {
     return new Promise((resolve) => {
       const listener = new AudioListener();
       this.camera.add(listener);
