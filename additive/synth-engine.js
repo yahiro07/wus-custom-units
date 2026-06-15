@@ -1,4 +1,4 @@
-window.checkUnitInterfaceCompatibility?.("wus-v01");
+window.checkUnitInterfaceCompatibility?.("wafer-v01");
 
 class AdditiveEngine {
   constructor() {
