@@ -32,9 +32,9 @@ import {
   defaultNoteVolume,
   defaultPattern,
 } from './utils';
-import { queryUnitInterface } from 'wus-unit-types';
+import { queryUnitInterface } from 'wafer-host/unit-types';
 
-const unitInterface = queryUnitInterface('wus-v01');
+const unitInterface = queryUnitInterface('wafer-v01');
 
 // 初期化して使う
 let audioCtx: AudioContext;
