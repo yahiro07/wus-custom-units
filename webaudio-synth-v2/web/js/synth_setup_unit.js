@@ -1,4 +1,4 @@
-function setupWebAudioUnit() {
+function setupWaferUnit() {
   window.unitInterface?.completeSetup({
     unitAspects: {
       unitType: "instrument",
@@ -14,6 +14,16 @@ function setupWebAudioUnit() {
         ctrl.note_off(noteNumber);
       },
     },
+    persistence: {
+      emitState() {
+        return ctrl.getParameters();
+      },
+      applyState(states) {
+        ctrl.setParameters(states);
+      },
+    },
   });
 }
-setupWebAudioUnit();
+$(function () {
+  setupWaferUnit();
+});
