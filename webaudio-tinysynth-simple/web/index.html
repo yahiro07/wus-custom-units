@@ -49,7 +49,7 @@
           persistence: {
             emitStateBytes() {
               const pg = document.getElementById("prog").selectedIndex;
-              return new Unit8Array([pg]);
+              return new Uint8Array([pg]);
             },
             applyStateBytes(stateBytes) {
               const pg = stateBytes[0];
