@@ -13,6 +13,33 @@ var app = {
     //Init the main UI and create the synth
     ui.init();
     app.createSynth();
+
+    window.unitInterface?.completeSetup({
+      unitAspects: {
+        unitType: "instrument",
+        categoryHint: "synthesizer",
+        outputs: ["audio"],
+        inputs: ["note"],
+      },
+      noteInput: {
+        noteOn(noteNumber, velocity) {
+          app.checkContext();
+          app.synth.noteOn(noteNumber, velocity * 127);
+        },
+        noteOff(noteNumber) {
+          app.synth.noteOff(noteNumber);
+        },
+      },
+      persistence: {
+        emitStateBytes: function () {
+          return app.synth.emitStateBytes();
+        },
+        applyStateBytes: function (bytes) {
+          app.synth.applyStateBytes(bytes);
+          ui.updateSynthVisualControls();
+        },
+      },
+    });
   },
 
   //----------------------

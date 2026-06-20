@@ -794,6 +794,21 @@ synth.prototype = {
     }
   },
 
+  emitStateBytes: function () {
+    return new Uint8Array([
+      this.currentPreset,
+      ...this.controls.map((control) => control.value),
+    ]);
+  },
+
+  applyStateBytes: function (bytes) {
+    if (bytes.length !== this.controls.length + 1) return;
+    this.currentPreset = bytes[0];
+    for (var i = 0; i < this.controls.length; i++) {
+      this.setControlValue(i, bytes[i + 1]);
+    }
+  },
+
   //-------
 
   dumpPresetToConsole: function () {
