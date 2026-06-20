@@ -355,7 +355,6 @@ function getStates() {
 }
 
 function setStates(states) {
-  console.log("setStates", states);
   document.getElementById("presetSelect").value = states.preset;
   engine.setHarmonics(states.harmonics);
   engine.setADSR(states.attack, states.decay, states.sustain, states.release);
