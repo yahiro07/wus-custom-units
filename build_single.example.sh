@@ -20,4 +20,4 @@ mkdir -p "$dstDir"
 # cp -r webaudio-tinysynth-simple/web/. "$dstDir/webaudio-tinysynth-simple"
 # cp -r vissonance/web/. "$dstDir/vissonance"
 
-echo "copying done."
+echo "copy done."
