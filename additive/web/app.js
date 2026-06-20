@@ -341,6 +341,33 @@ function startVisualization() {
   draw();
 }
 
+// ── Persistence ──
+function getStates() {
+  const preset = document.getElementById("presetSelect").value;
+  const harmonics = engine.harmonicAmplitudes;
+  const attack = document.getElementById("attack").value / 500;
+  const decay = document.getElementById("decay").value / 500;
+  const sustain = document.getElementById("sustain").value / 100;
+  const release = document.getElementById("release").value / 250;
+  const reverb = document.getElementById("reverb").value / 100;
+  const volume = document.getElementById("vol").value / 100;
+  return { preset, harmonics, attack, decay, sustain, release, reverb, volume };
+}
+
+function setStates(states) {
+  console.log("setStates", states);
+  document.getElementById("presetSelect").value = states.preset;
+  engine.setHarmonics(states.harmonics);
+  engine.setADSR(states.attack, states.decay, states.sustain, states.release);
+  document.getElementById("attack").value = states.attack * 500;
+  document.getElementById("decay").value = states.decay * 500;
+  document.getElementById("sustain").value = states.sustain * 100;
+  document.getElementById("release").value = states.release * 250;
+  document.getElementById("reverb").value = states.reverb * 100;
+  document.getElementById("vol").value = states.volume * 100;
+  updateHarmonicsDisplay();
+}
+
 // ── Event Listeners ──
 document.addEventListener("DOMContentLoaded", () => {
   buildPresetSelector();
@@ -456,6 +483,10 @@ document.addEventListener("DOMContentLoaded", () => {
         noteOff(noteNumber) {
           handleKeyUp(noteNumber);
         },
+      },
+      persistence: {
+        emitState: getStates,
+        applyState: setStates,
       },
     });
   } else {
