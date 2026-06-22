@@ -635,7 +635,7 @@ synth.prototype = {
 
     var sustainValue =
       (sustainPercent * (maxSustain - minSustain)) / 100 + minSustain;
-    console.log(sustainValue);
+    // console.log(sustainValue);
 
     filterNode.detune.setTargetAtTime(
       sustainValue,
@@ -689,7 +689,7 @@ synth.prototype = {
 
     finalVal = this.oscFineTuning[osc] + this.oscTuning[osc];
 
-    console.log(this.oscTuning[osc]);
+    // console.log(this.oscTuning[osc]);
 
     for (var i = 0; i < this.polyphony; i++) {
       this.oscNodes[i][osc].detune.setValueAtTime(
@@ -715,7 +715,7 @@ synth.prototype = {
 
     finalVal = this.oscFineTuning[osc] + this.oscTuning[osc];
 
-    console.log(this.oscFineTuning[osc]);
+    // console.log(this.oscFineTuning[osc]);
 
     for (var i = 0; i < this.polyphony; i++) {
       this.oscNodes[i][osc].detune.setValueAtTime(
@@ -787,7 +787,7 @@ synth.prototype = {
   //-------
 
   loadPreset: function (id) {
-    console.log("Loading preset: " + this.presets[id].name);
+    // console.log("Loading preset: " + this.presets[id].name);
     this.currentPreset = id;
     for (var i = 0; i < this.controls.length; i++) {
       this.setControlValue(i, this.presets[id].value[i]);
@@ -820,7 +820,7 @@ synth.prototype = {
       }
     }
     controlValues += "]";
-    console.log(controlValues);
+    // console.log(controlValues);
     return true;
   },
 
