@@ -82,7 +82,10 @@ var app = {
   //----------------------
 
   checkContext() {
-    if (this.context.state == "suspended") {
+    if (
+      this.context instanceof AudioContext &&
+      this.context.state == "suspended"
+    ) {
       this.context.resume();
     }
   },
