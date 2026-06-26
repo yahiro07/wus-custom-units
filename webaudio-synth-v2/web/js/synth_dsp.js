@@ -412,7 +412,10 @@ WebSynth.prototype.refresh_pitch = function () {
 };
 
 WebSynth.prototype.play = function (n) {
-  if (this.context.state === "suspended") {
+  if (
+    this.context instanceof AudioContext &&
+    this.context.state === "suspended"
+  ) {
     this.context.resume();
   }
   this.current_note = n;
