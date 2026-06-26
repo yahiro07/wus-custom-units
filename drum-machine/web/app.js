@@ -72,8 +72,11 @@ window.checkUnitInterfaceCompatibility?.("wafer-v01");
         setTimeout(() => highlightStep(step), delay);
       },
     });
-  }
 
+    if (audioCtx instanceof AudioContext && audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+  }
   // build grid dom
   function renderGrid() {
     grid.innerHTML = "";
@@ -159,7 +162,6 @@ window.checkUnitInterfaceCompatibility?.("wafer-v01");
   // transport
   playBtn.addEventListener("click", () => {
     ensureAudio();
-    if (audioCtx.state === "suspended") audioCtx.resume();
     if (scheduler.isRunning()) {
       scheduler.stop();
       playBtn.textContent = "play";
@@ -287,7 +289,6 @@ window.checkUnitInterfaceCompatibility?.("wafer-v01");
       setPlayState(playing) {
         if (playing) {
           ensureAudio();
-          if (audioCtx.state === "suspended") audioCtx.resume();
           if (!scheduler.isRunning()) {
             scheduler.start();
             playBtn.textContent = "stop";
@@ -295,7 +296,6 @@ window.checkUnitInterfaceCompatibility?.("wafer-v01");
           }
         } else {
           ensureAudio();
-          if (audioCtx.state === "suspended") audioCtx.resume();
           if (scheduler.isRunning()) {
             scheduler.stop();
             playBtn.textContent = "play";
