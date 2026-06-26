@@ -323,7 +323,7 @@ const ensureInitialized = async () => {
 };
 
 const resumeAudioContext = async () => {
-  if (audioCtx.state === 'suspended') {
+  if (audioCtx instanceof AudioContext && audioCtx.state === 'suspended') {
     await audioCtx.resume();
   }
 };
