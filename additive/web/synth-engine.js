@@ -24,7 +24,9 @@ class AdditiveEngine {
     this.ctx =
       window.unitInterface?.audioContext ??
       new (window.AudioContext ?? window.webkitAudioContext)();
-    if (this.ctx.state === "suspended") await this.ctx.resume();
+    if (this.ctx instanceof AudioContext && this.ctx.state === "suspended") {
+      await this.ctx.resume();
+    }
 
     this.compressor = this.ctx.createDynamicsCompressor();
     this.compressor.threshold.value = -12;
