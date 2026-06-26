@@ -2193,7 +2193,10 @@
         const ch = msg[0] & 0xf;
         const cmd = msg[0] & ~0xf;
         if (cmd < 0x80 || cmd >= 0x100) return;
-        if (this.audioContext.state == "suspended") {
+        if (
+          this.audioContext instanceof AudioContext &&
+          this.audioContext.state === "suspended"
+        ) {
           this.audioContext.resume();
         }
         switch (cmd) {
