@@ -55,7 +55,6 @@ async function initAudio() {
   if (isInitialized) return;
   await engine.init();
   isInitialized = true;
-  loadPreset("Sawtooth");
   startVisualization();
 }
 
@@ -372,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
   buildPresetSelector();
   buildHarmonicsEditor();
   buildKeyboard();
-  updateHarmonicsDisplay();
+  loadPreset("Sawtooth");
 
   // Harmonics editor interaction
   const editor = document.getElementById("harmonicsEditor");
