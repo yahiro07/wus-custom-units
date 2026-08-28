@@ -1,3 +1,4 @@
+import { applyStateBytes, emitStateBytes } from "@/root/persistence";
 import { createSequencer } from "@/root/sequencer";
 import { store } from "@/root/store";
 import { createSequencerTickDriver } from "@/utils/sequencer-tick-driver";
@@ -34,6 +35,10 @@ function setupUnit() {
     clockHandlers: {
       processStep: sequencerWrapper.processStep,
       stop: sequencerWrapper.stop,
+    },
+    persistence: {
+      emitStateBytes,
+      applyStateBytes,
     },
     cleanup: sequencer.cleanup,
   });
