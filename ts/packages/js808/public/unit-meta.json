@@ -1,0 +1,11 @@
+{
+  "name": "js808",
+  "unitType": "instrument",
+  "protocol": "wafer-v01",
+  "integrationFormat": "iframe",
+  "originalRepositoryUrl": "https://codepen.io/mecarter/pen/KKevor",
+  "originalAuthor": "Mark E. Carter",
+  "forkedRepositoryUrl": "https://github.com/yahiro07/wafer-custom-units",
+  "forkedAuthor": "yahiro",
+  "license": "MIT"
+}
