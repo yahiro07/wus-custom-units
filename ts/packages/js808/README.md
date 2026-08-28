@@ -1,6 +1,10 @@
 # JS808
 
-based on CodePen https://codepen.io/mecarter/pen/KKevor
+Based on A Pen created on CodePen.
+
+Original URL: [https://codepen.io/mecarter/pen/KKevor](https://codepen.io/mecarter/pen/KKevor).
+
+A Backbone.js powered "clone" of the classic TR808 drum machine. TR808 audio samples come from http://smd-records.com/tr808/?page_id=14. Be sure to full page it!
 
 ## Modifications for Wafer Unit
 
