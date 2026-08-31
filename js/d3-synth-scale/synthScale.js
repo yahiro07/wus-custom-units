@@ -318,7 +318,7 @@ function triggerNote(pitch, time, duration, waveform) {
   }
   if (noteOutputPort) {
     const noteNumber = Math.round(12 * Math.log2(frequency / 440) + 69);
-    noteOutputPort.noteOn(noteNumber, time, 1);
+    noteOutputPort.noteOn(noteNumber, time);
     noteOutputPort.noteOff(noteNumber, time + duration);
   }
 }
