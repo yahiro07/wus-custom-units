@@ -1,0 +1,17 @@
+{
+  "name": "js808",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "preact": "^10.29.8",
+    "snap-store": "^0.1.14",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "wafer-host": "catalog:"
+  }
+}
