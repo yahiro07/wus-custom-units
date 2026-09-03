@@ -30,8 +30,8 @@ async function initApp() {
       viewSize: [1060, 630],
     },
     noteInput: {
-      noteOn(noteNumber, time, velocity) {
-        synth.noteOn(noteNumber, velocity ?? 1, time);
+      noteOn(noteNumber, time, attrs) {
+        synth.noteOn(noteNumber, attrs?.velocity ?? 1, time);
       },
       noteOff(noteNumber, time) {
         synth.noteOff(noteNumber, time);
@@ -92,7 +92,8 @@ function emitPersistedState() {
 function parsePersistedState(state) {
   if (!state || typeof state !== "object") return null;
   const params = state.params ?? state;
-  if (!params || typeof params !== "object" || Array.isArray(params)) return null;
+  if (!params || typeof params !== "object" || Array.isArray(params))
+    return null;
   return params;
 }
 
@@ -176,10 +177,7 @@ document.getElementById("savePresetBtn").addEventListener("click", () => {
     localStorage.getItem("synthModular_userPresets") || "{}",
   );
   userPresets[name] = { ...synth.params };
-  localStorage.setItem(
-    "synthModular_userPresets",
-    JSON.stringify(userPresets),
-  );
+  localStorage.setItem("synthModular_userPresets", JSON.stringify(userPresets));
   const sel = document.getElementById("presetSelect");
   const opt = document.createElement("option");
   opt.value = "user:" + name;
@@ -194,8 +192,7 @@ function bindControls() {
     const param = el.dataset.param;
     const handler = () => {
       let val = el.value;
-      if (el.type === "range" || el.type === "number")
-        val = parseFloat(val);
+      if (el.type === "range" || el.type === "number") val = parseFloat(val);
       if (["octave", "osc2Octave"].includes(param)) val = parseInt(val);
       synth.setParam(param, val);
       const display = document.querySelector(`[data-for="${param}"]`);
@@ -217,14 +214,12 @@ function bindControls() {
   });
 
   // Sequencer controls
-  document
-    .getElementById("seqPlayBtn")
-    .addEventListener("click", async () => {
-      await synth.init();
-      synth.resume();
-      seq.start();
-      document.getElementById("seqPlayBtn").classList.add("active");
-    });
+  document.getElementById("seqPlayBtn").addEventListener("click", async () => {
+    await synth.init();
+    synth.resume();
+    seq.start();
+    document.getElementById("seqPlayBtn").classList.add("active");
+  });
   document.getElementById("seqStopBtn").addEventListener("click", () => {
     seq.stop();
     document.getElementById("seqPlayBtn").classList.remove("active");
@@ -232,13 +227,11 @@ function bindControls() {
   document.getElementById("seqBPM").addEventListener("input", (e) => {
     seq.setBPM(parseInt(e.target.value));
   });
-  document
-    .getElementById("seqRandomBtn")
-    .addEventListener("click", () => {
-      const scale = document.getElementById("seqScale").value;
-      seq.randomize(scale);
-      updateSequencerUI();
-    });
+  document.getElementById("seqRandomBtn").addEventListener("click", () => {
+    const scale = document.getElementById("seqScale").value;
+    seq.randomize(scale);
+    updateSequencerUI();
+  });
 }
 
 function formatVal(param, val) {
@@ -414,8 +407,7 @@ function buildSequencer() {
 
   for (let i = 0; i < 16; i++) {
     const step = document.createElement("div");
-    step.className =
-      "seq-step" + (seq.pattern[i].active ? " active" : "");
+    step.className = "seq-step" + (seq.pattern[i].active ? " active" : "");
     step.dataset.step = i;
     step.addEventListener("click", () => {
       const isActive = seq.toggleStep(i);
@@ -450,8 +442,7 @@ function updateSequencerUI() {
   const steps = document.querySelectorAll(".seq-step");
   const noteSelects = document.querySelectorAll(".seq-note-select");
   for (let i = 0; i < 16; i++) {
-    if (steps[i])
-      steps[i].classList.toggle("active", seq.pattern[i].active);
+    if (steps[i]) steps[i].classList.toggle("active", seq.pattern[i].active);
     if (noteSelects[i]) noteSelects[i].value = seq.pattern[i].note;
   }
 }
@@ -495,10 +486,8 @@ function startVisualization() {
   const ctx = canvas.getContext("2d");
 
   function resize() {
-    canvas.width =
-      canvas.parentElement.clientWidth * window.devicePixelRatio;
-    canvas.height =
-      canvas.parentElement.clientHeight * window.devicePixelRatio;
+    canvas.width = canvas.parentElement.clientWidth * window.devicePixelRatio;
+    canvas.height = canvas.parentElement.clientHeight * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
   }
   resize();

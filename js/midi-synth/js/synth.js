@@ -1035,8 +1035,8 @@ function initAudio() {
       viewSize: [940, 550],
     },
     noteInput: {
-      noteOn(note, time, velocity) {
-        noteOn(note, time, velocity);
+      noteOn(note, time, attrs) {
+        noteOn(note, time, attrs?.velocity);
       },
       noteOff(note, time) {
         noteOff(note, time);

@@ -1,7 +1,7 @@
 import * as Tone from "tone";
 import {
   queryUnitInterface,
-  NotePort,
+  NoteOutputPort,
   UnitInterface,
 } from "wafer-host/unit-types";
 
@@ -11,7 +11,7 @@ type WaferToneSynthBridge = {
   createNotePortAdapted(receiver: {
     triggerAttack(frequency: number, time: number, velocity: number): void;
     triggerRelease(time: number): void;
-  }): NotePort;
+  }): NoteOutputPort;
 };
 
 const calculateMidiNoteFrequency = (midiNumber: number) =>
@@ -69,12 +69,12 @@ export function createWaferToneSynthBridge(): WaferToneSynthBridge {
     destinationNode: wrappedDestinationNode,
     createNotePortAdapted(receiver) {
       return {
-        noteOn(noteNumber, time, velocity) {
+        noteOn(noteNumber, time, attrs) {
           time = shiftAudioContextTimeRelative(time);
           receiver.triggerAttack(
             calculateMidiNoteFrequency(noteNumber),
             time,
-            velocity ?? 1,
+            attrs?.velocity ?? 1,
           );
           lastNoteNumber = noteNumber;
         },

@@ -19,8 +19,8 @@ async function Init() {
       viewSize: [570, 287],
     },
     noteInput: {
-      noteOn(noteNumber, time, velocity) {
-        synth.send([0x90, noteNumber, (velocity ?? 1) * 127], time);
+      noteOn(noteNumber, time, attrs) {
+        synth.send([0x90, noteNumber, (attrs?.velocity ?? 1) * 127], time);
       },
       noteOff(noteNumber, time) {
         synth.send([0x80, noteNumber, 0], time);
